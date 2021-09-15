@@ -12,15 +12,17 @@ struct Pipe
 struct Station
 {
     int id;
-    string station_name
-    int deps;
-    int workiing_deps;
+    string station_name;
+    int shops;
+    int working_shops;
     int effect;
 };
 
 void PipeOutput(Pipe& pipe)
 {
     cout << endl;
+    cout << "Entered pipeline properties: " << endl;
+
     cout << "ID of Pipeline: " << pipe.id << endl;
     cout << "Diameter: " << pipe.d << endl;
     cout << "Length: " << pipe.l << endl;
@@ -30,15 +32,20 @@ void PipeOutput(Pipe& pipe)
 void StationOutput(Station& s)
 {
     cout << endl;
-    cout << "ID of Station: " << pipe1.id << endl;
-    cout << "Diameter: " << pipe1.d << endl;
-    cout << "Length: " << pipe1.l << endl;
-    cout << "Is Repair? : " << pipe1.Repair << endl;
+    cout << "Entered station properties: " << endl;
+
+    cout << "ID: " << s.id << endl;
+    cout << "Name: " << s.station_name << endl;
+    cout << "Shops: " << s.shops << endl;
+    cout << "Working shops: " << s.working_shops << endl;
+    cout << "Effectiveness: " << s.effect << endl;
 }
 
 Pipe Create_pipe()
 {
     Pipe p = {};
+
+    cout << "Hey! Ready to read pipeline properties." << endl;
 
     cout << "Diameter: ";
     cin >> p.d;
@@ -54,7 +61,23 @@ Pipe Create_pipe()
 
 Station Create_station()
 {
+    Station st = {};
 
+    cout << "Hey! Ready to read station properties." << endl;
+
+    cout << "Name: ";
+    cin >> st.station_name;
+
+    cout << "Shops: ";
+    cin >> st.shops;
+
+    cout << "Working shops: ";
+    cin >> st.working_shops;
+
+    cout << "Effectiveness: ";
+    cin >> st.effect;
+
+    return st;
 }
 
 int main()
@@ -62,5 +85,6 @@ int main()
     Pipe pipe = Create_pipe();
     PipeOutput(pipe);
 
-
+    Station station = Create_station();
+    StationOutput(station);
 }
