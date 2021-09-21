@@ -63,7 +63,7 @@ Station Create_station()
 {
     Station st = {};
 
-    cout << "Hey! Ready to read station properties." << endl;
+    cout << endl << "Hey! Ready to read station properties." << endl;
 
     cout << "Name: ";
     cin >> st.station_name;
