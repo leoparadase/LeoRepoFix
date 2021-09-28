@@ -18,6 +18,37 @@ struct Station
     int effect;
 };
 
+int isInt()
+{
+    while (1)
+    {
+        int number;
+        cin >> number;
+
+        if (cin.fail() || number > 0)
+        {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Incorrect. Enter the integer number more than 0: ";
+        }
+        else
+        {
+            return number;
+        }
+
+    }
+}
+
+float isFloat()
+{
+
+}
+
+int isEffect()
+{
+
+}
+
 void PipeOutput(Pipe& pipe)
 {
     cout << endl;
@@ -26,7 +57,7 @@ void PipeOutput(Pipe& pipe)
     cout << "ID of Pipeline: " << pipe.id << endl;
     cout << "Diameter: " << pipe.d << endl;
     cout << "Length: " << pipe.l << endl;
-    cout << "Is Repair? : " << pipe.Repair << endl << endl;
+    cout << "Is Repair? : " << pipe.Repair << endl;
 }
 
 void StationOutput(Station& s)
@@ -38,12 +69,13 @@ void StationOutput(Station& s)
     cout << "Name: " << s.station_name << endl;
     cout << "Shops: " << s.shops << endl;
     cout << "Working shops: " << s.working_shops << endl;
-    cout << "Effectiveness: " << s.effect << endl << endl;
+    cout << "Effectiveness: " << s.effect << endl;
 }
 
 Pipe Create_pipe()
 {
     Pipe p = {};
+    
 
     cout << "Hey! Ready to read pipeline properties." << endl;
 
@@ -56,7 +88,7 @@ Pipe Create_pipe()
     cout << "Is repair? ";
     cin >> p.Repair;
 
-    cout << endl << endl;
+    cout << endl;
 
     return p;
 }
@@ -79,7 +111,7 @@ Station Create_station()
     cout << "Effectiveness: ";
     cin >> st.effect;
 
-    cout << endl << endl;
+    cout << endl;
 
     return st;
 }
