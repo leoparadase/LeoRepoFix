@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 struct Pipe
@@ -65,7 +66,7 @@ int isEffect() // int? 0<=x<=100?
         int number;
         cin >> number;
 
-        if (cin.fail() || (number < 0 & number > 100))
+        if (cin.fail() || number < 0 || number > 100)
         {
             cin.clear();
             cin.ignore(32767, '\n');
@@ -218,7 +219,7 @@ int main()
         cout << "7. Load from file" << endl;
         cout << "8. Quit" << endl << endl;
 
-        cin >> a;
+        a = isInt();
         cout << endl;
 
         switch (a)
@@ -250,12 +251,104 @@ int main()
                 cout << "No station in base." << endl << endl;
             };
             break;
-        case 4:
-            //more switch with prop select
+        case 4: //modify
+            {
+            int b = 0;
+
+            if (pipe.d > 0)
+            {
+                cout << "What to edit?" << endl << endl;
+
+                cout << "1. Diameter" << endl;
+                cout << "2. Length" << endl;
+                cout << "3. Repair status" << endl;
+                cout << "4. Back to Home" << endl;
+                
+                b = isInt();
+                cout << endl;
+            
+                switch(b)
+                {
+                case 1:
+                    cout << "New diameter: ";
+                    pipe.d = isInt();
+                    break;
+                case 2:
+                    cout << "New lentgh: ";
+                    pipe.l = isFloat();
+                    break;
+                case 3:
+                    cout << "Is repair? ";
+                    pipe.Repair = isBool();
+                    break;
+                case 4:
+                    break;
+                }
+            }
+            else
+            {
+               cout << "No pipeline in base." << endl << endl; 
+            }
             break;
+            }
         case 5:
-            //more switch with prop select
+            {
+            int c = 0;
+
+            if (station.shops > 0)
+            {
+                cout << "What to edit?" << endl << endl;
+
+                cout << "1. Station name" << endl;
+                cout << "2. Shops" << endl;
+                cout << "3. Working shops" << endl;
+                cout << "4. Effectiveness" << endl;
+                cout << "5. Back to Home" << endl;
+                
+                c = isInt();
+                cout << endl;
+            
+                switch(c)
+                {
+                case 1:
+                    cout << "New station name: ";
+                    station.station_name = isInt();
+                    break;
+                case 2:
+                    cout << "New number of shops: ";
+                    station.shops = isInt();
+                    break;
+                case 3:
+                {
+                    while(1)
+                    {
+                    int sh = station.working_shops;
+                    cout << "New number of working shops: ";
+                    station.working_shops = isInt();
+                    if (station.working_shops > station.shops)
+                        {
+                            cout << "Number of working shops can't be more than number of all shops. Enter again: ";
+                            station.working_shops = sh;
+                            
+                        }
+                    else break;
+                    }
+                    break;
+                }
+                case 4:
+                    cout << "New effectiveness: ";
+                    station.effect = isEffect();
+                    break;
+                case 5:
+                    break;
+                }
+            }
+            else
+            {
+               cout << "No station in base." << endl << endl; 
+            }
             break;
+            }
         case 6:
             //fstream
             break;
@@ -263,7 +356,7 @@ int main()
             //fstream
             break;
         case 8:
-            //quit
+            return 0;
             break;
         }
 
