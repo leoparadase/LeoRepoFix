@@ -102,36 +102,48 @@ int main()
         switch (a)
         {
         case 1:
-
+            Pipe pipe = Create_pipe();
+            cout << "Pipeline added." << endl;
             break;
         case 2:
-
+            Station station = Create_station();
+            cout << "Station added.";
             break;
         case 3:
-
+            if (pipe.d() != NULL) :
+            {
+                PipeOutput(pipe);
+            }
+            else:
+            {
+                cout << "No pipeline in base."
+            }
+            
+            if (station.shops() != NULL) :
+            {
+                StationOutput(station);
+            }
+            else:
+            {
+                cout << "No station in base."
+            }
             break;
         case 4:
-
+            //more switch with prop select
             break;
         case 5:
-
+            //more switch with prop select
             break;
         case 6:
-
+            //fstream
             break;
         case 7:
-
+            //fstream
             break;
         case 8:
-
+            //quit
             break;
         }
 
-    }
-    
-    Pipe pipe = Create_pipe();
-    PipeOutput(pipe);
-
-    Station station = Create_station();
-    StationOutput(station);
+    } 
 }
