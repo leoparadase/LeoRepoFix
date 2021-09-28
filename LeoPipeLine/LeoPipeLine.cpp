@@ -26,7 +26,7 @@ void PipeOutput(Pipe& pipe)
     cout << "ID of Pipeline: " << pipe.id << endl;
     cout << "Diameter: " << pipe.d << endl;
     cout << "Length: " << pipe.l << endl;
-    cout << "Is Repair? : " << pipe.Repair << endl;
+    cout << "Is Repair? : " << pipe.Repair << endl << endl;
 }
 
 void StationOutput(Station& s)
@@ -38,7 +38,7 @@ void StationOutput(Station& s)
     cout << "Name: " << s.station_name << endl;
     cout << "Shops: " << s.shops << endl;
     cout << "Working shops: " << s.working_shops << endl;
-    cout << "Effectiveness: " << s.effect << endl;
+    cout << "Effectiveness: " << s.effect << endl << endl;
 }
 
 Pipe Create_pipe()
@@ -55,6 +55,8 @@ Pipe Create_pipe()
 
     cout << "Is repair? ";
     cin >> p.Repair;
+
+    cout << endl << endl;
 
     return p;
 }
@@ -77,11 +79,16 @@ Station Create_station()
     cout << "Effectiveness: ";
     cin >> st.effect;
 
+    cout << endl << endl;
+
     return st;
 }
 
 int main()
 {
+    Pipe pipe = {};
+    Station station = {};
+
     while (1)
     {
         int a = 0;
@@ -95,38 +102,39 @@ int main()
         cout << "5. Modify the station" << endl;
         cout << "6. Save to file" << endl;
         cout << "7. Load from file" << endl;
-        cout << "8. Quit" << endl;
+        cout << "8. Quit" << endl << endl;
 
         cin >> a;
+        cout << endl << endl;
 
         switch (a)
         {
         case 1:
-            Pipe pipe = Create_pipe();
-            cout << "Pipeline added." << endl;
+            pipe = Create_pipe();
+            cout << "Pipeline added." << endl << endl;
             break;
         case 2:
-            Station station = Create_station();
-            cout << "Station added.";
+            station = Create_station();
+            cout << "Station added." << endl << endl;
             break;
         case 3:
-            if (pipe.d() != NULL) :
+            if (pipe.d > 0)
             {
                 PipeOutput(pipe);
             }
-            else:
+            else
             {
-                cout << "No pipeline in base."
-            }
+                cout << "No pipeline in base." << endl << endl;
+            };
             
-            if (station.shops() != NULL) :
+            if (station.shops > 0)
             {
                 StationOutput(station);
             }
-            else:
+            else
             {
-                cout << "No station in base."
-            }
+                cout << "No station in base." << endl << endl;
+            };
             break;
         case 4:
             //more switch with prop select
