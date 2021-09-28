@@ -109,7 +109,7 @@ bool isBool() // bool?
         {
             cin.clear();
             cin.ignore(32767, '\n');
-            cout << "Incorrect. Enter True or False";
+            cout << "Incorrect. Enter True or False: ";
         }
         else
         {
@@ -126,7 +126,7 @@ void PipeOutput(Pipe& pipe)
     cout << "ID of Pipeline: " << pipe.id << endl;
     cout << "Diameter: " << pipe.d << endl;
     cout << "Length: " << pipe.l << endl;
-    cout << "Is Repair? : " << pipe.Repair << endl;
+    cout << "Is Repair? : " << pipe.Repair << endl << endl;
 }
 
 void StationOutput(Station& s)
@@ -138,7 +138,7 @@ void StationOutput(Station& s)
     cout << "Name: " << s.station_name << endl;
     cout << "Shops: " << s.shops << endl;
     cout << "Working shops: " << s.working_shops << endl;
-    cout << "Effectiveness: " << s.effect << endl;
+    cout << "Effectiveness: " << s.effect << endl << endl;
 }
 
 Pipe Create_pipe()
@@ -219,7 +219,7 @@ int main()
         cout << "8. Quit" << endl << endl;
 
         cin >> a;
-        cout << endl << endl;
+        cout << endl;
 
         switch (a)
         {
