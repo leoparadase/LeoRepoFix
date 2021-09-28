@@ -35,13 +35,27 @@ int isInt()
         {
             return number;
         }
-
     }
 }
 
 float isFloat()
 {
+    while (1)
+    {
+        float number;
+        cin >> number;
 
+        if (cin.fail() || number > 0)
+        {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Incorrect. Enter the float number more than 0: ";
+        }
+        else
+        {
+            return number;
+        }
+    }
 }
 
 int isEffect()
