@@ -82,6 +82,53 @@ Station Create_station()
 
 int main()
 {
+    while (1)
+    {
+        int a = 0;
+        
+        cout << "Hi! Choose the action:" << endl << endl;
+
+        cout << "1. Add a pipeline" << endl;
+        cout << "2. Add a station" << endl;
+        cout << "3. See all" << endl;
+        cout << "4. Modify the pipeline" << endl;
+        cout << "5. Modify the station" << endl;
+        cout << "6. Save to file" << endl;
+        cout << "7. Load from file" << endl;
+        cout << "8. Quit" << endl;
+
+        cin >> a;
+
+        switch (a)
+        {
+        case 1:
+
+            break;
+        case 2:
+
+            break;
+        case 3:
+
+            break;
+        case 4:
+
+            break;
+        case 5:
+
+            break;
+        case 6:
+
+            break;
+        case 7:
+
+            break;
+        case 8:
+
+            break;
+        }
+
+    }
+    
     Pipe pipe = Create_pipe();
     PipeOutput(pipe);
 
