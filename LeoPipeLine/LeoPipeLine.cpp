@@ -18,14 +18,14 @@ struct Station
     int effect;
 };
 
-int isInt()
+int isInt() // int? more than 0?
 {
     while (1)
     {
         int number;
         cin >> number;
 
-        if (cin.fail() || number > 0)
+        if (cin.fail() || number < 0)
         {
             cin.clear();
             cin.ignore(32767, '\n');
@@ -38,14 +38,14 @@ int isInt()
     }
 }
 
-float isFloat()
+float isFloat() //float? more than 0?
 {
     while (1)
     {
         float number;
         cin >> number;
 
-        if (cin.fail() || number > 0)
+        if (cin.fail() || number < 0)
         {
             cin.clear();
             cin.ignore(32767, '\n');
@@ -58,9 +58,64 @@ float isFloat()
     }
 }
 
-int isEffect()
+int isEffect() // int? 0<=x<=100?
 {
+    while (1)
+    {
+        int number;
+        cin >> number;
 
+        if (cin.fail() || (number < 0 & number > 100))
+        {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Incorrect. Enter the integer number between 0 and 100: ";
+        }
+        else
+        {
+            return number;
+        }
+    }
+}
+
+string isString() //is string?
+{
+    while (1)
+    {
+        string str;
+        cin >> str;
+
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Incorrect. Enter the string: ";
+        }
+        else
+        {
+            return str;
+        }
+    }
+}
+
+bool isBool() // bool?
+{
+    while (1)
+    {
+        bool condition;
+        cin >> condition;
+
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Incorrect. Enter True or False";
+        }
+        else
+        {
+            return condition;
+        }
+    }
 }
 
 void PipeOutput(Pipe& pipe)
@@ -94,13 +149,13 @@ Pipe Create_pipe()
     cout << "Hey! Ready to read pipeline properties." << endl;
 
     cout << "Diameter: ";
-    cin >> p.d;
+    p.d = isInt();
 
     cout << "Lentgh: ";
-    cin >> p.l;
+    p.l = isFloat();
 
     cout << "Is repair? ";
-    cin >> p.Repair;
+    p.Repair = isBool();
 
     cout << endl;
 
@@ -114,16 +169,29 @@ Station Create_station()
     cout << endl << "Hey! Ready to read station properties." << endl;
 
     cout << "Name: ";
-    cin >> st.station_name;
+    st.station_name = isString();
 
     cout << "Shops: ";
-    cin >> st.shops;
+    st.shops = isInt();
 
     cout << "Working shops: ";
-    cin >> st.working_shops;
+    
+        while (1)
+        {
+            st.working_shops = isInt();
+            if (st.working_shops > st.shops)
+            {
+                cout << "Number of working shops can't be more than number of all shops. Enter again: ";
+                st.working_shops = 0;
+            }
+            else
+            {
+                break;
+            }
+        }
 
     cout << "Effectiveness: ";
-    cin >> st.effect;
+    st.effect = isEffect();
 
     cout << endl;
 
