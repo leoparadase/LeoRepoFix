@@ -1,6 +1,4 @@
-PIPELINE
-ID  Diameter    Length   Repair?
-0   58             58         1
+0	25	25	1
 
-No station in base.
+0	25	25	25	25
 

@@ -354,35 +354,85 @@ int main()
            {
             ofstream fout("data.txt", ios_base::out);
             
-            if (pipe.d > 0)
+            if (!fout)
             {
-                fout << "PIPELINE" << endl;
-                fout << "ID" << setw(10) << "Diameter" << setw(10) << "Length" << setw(10) << "Repair?" << endl;
-                fout << pipe.id << setw(5) << pipe.d << setw(15) << pipe.l << setw(10) << pipe.Repair << endl << endl;
+                cout << "Can't open file.";
+            }
+            else
+            {
+                if (pipe.d > 0)
+            {
+                //fout << "PIPELINE" << endl;
+                //fout << "ID" << setw(10) << "Diameter" << setw(10) << "Length" << setw(10) << "Repair?" << endl;
+                fout << pipe.id << "\t" << pipe.d << "\t" << pipe.l << "\t" << pipe.Repair << endl << endl;
             }
 
             else
             {
-                fout << "No pipeline in base." << endl << endl;
+                cout << "No pipeline in base." << endl << endl;
             }   
 
             if (station.shops > 0)
             {
-                fout << "STATION" << endl;
-                fout << "ID" << setw(15) << "Name" << setw(20) << "Shops" << setw(20) << "Working shops" << setw(20) << "Effectiveness" << endl;
-                fout << station.id << setw(15) << station.station_name << setw(20) << station.shops << setw(20) << station.working_shops << setw(20) << station.effect << endl << endl;
+                //fout << "STATION" << endl;
+                //fout << "ID" << setw(15) << "Name" << setw(20) << "Shops" << setw(20) << "Working shops" << setw(20) << "Effectiveness" << endl;
+                fout << station.id << "\t" << station.station_name << "\t" << station.shops << "\t" << station.working_shops << "\t" << station.effect << endl << endl;
+                cout << "File saved." << endl << endl;
             }
             else
             {
-                fout << "No station in base." << endl << endl;
+                cout << "No station in base." << endl << endl;
             }
             
             fout.close();
+            }
             break;
            }
         case 7:
-            //fstream
-            break;
+            {
+                int k = 0;
+                ifstream fin("data.txt");
+
+                if (!fin)
+                {
+                   cout << "Can't open file."; 
+                }
+                else
+                {
+                    while (fin)
+                    {
+                        string strIn;
+                        fin >> strIn;
+
+                        istringstream iss(strIn);
+
+                        if (strIn == "\n")
+                        {
+                            k++;
+                        }
+                        else
+                        {
+                            switch (k)
+                            {
+                                case 0:
+                                    {
+                                        iss >> pipe.id >> pipe.d >> pipe.l >> pipe.Repair;
+                                        break;
+                                    }
+                                case 1:
+                                    {
+                                        iss >> station.id >> station.station_name >> station.shops >> station.working_shops >> station.effect;
+                                        break;
+                                    }
+                            }
+                        }
+                    }
+                    cout << "File loaded." << endl << endl;
+                }
+                
+                fin.close();
+                break;
+            }
         case 8:
             return 0;
             break;
