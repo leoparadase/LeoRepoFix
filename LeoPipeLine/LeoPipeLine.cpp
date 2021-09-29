@@ -19,7 +19,7 @@ struct Station
     int effect;
 };
 
-int isInt() // int? more than 0?
+int isInt() 
 {
     while (1)
     {
@@ -39,7 +39,7 @@ int isInt() // int? more than 0?
     }
 }
 
-float isFloat() //float? more than 0?
+float isFloat() 
 {
     while (1)
     {
@@ -59,7 +59,7 @@ float isFloat() //float? more than 0?
     }
 }
 
-int isEffect() // int? 0<=x<=100?
+int isEffect() 
 {
     while (1)
     {
@@ -79,7 +79,7 @@ int isEffect() // int? 0<=x<=100?
     }
 }
 
-string isString() //is string?
+string isString() 
 {
     while (1)
     {
@@ -99,7 +99,7 @@ string isString() //is string?
     }
 }
 
-bool isBool() // bool?
+bool isBool() 
 {
     while (1)
     {
@@ -251,7 +251,7 @@ int main()
                 cout << "No station in base." << endl << endl;
             };
             break;
-        case 4: //modify
+        case 4: 
             {
             int b = 0;
 
@@ -351,6 +351,18 @@ int main()
             }
         case 6:
             //fstream
+
+            ifstream file;
+            file.open("data.txt");  //ios_base::out | ios_base::trunc
+            ofstream ofs("test.txt")
+
+                /*if (!fout.is_open()) // если файл небыл открыт
+                {
+                    cout << "Файл не может быть открыт или создан\n"; // напечатать соответствующее сообщение
+                    return 1; // выполнить выход из программы
+                }*/
+            
+
             break;
         case 7:
             //fstream
