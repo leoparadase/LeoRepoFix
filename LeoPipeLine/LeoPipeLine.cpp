@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 struct Pipe
@@ -350,20 +351,35 @@ int main()
             break;
             }
         case 6:
-            //fstream
-
-            ifstream file;
-            file.open("data.txt");  //ios_base::out | ios_base::trunc
-            ofstream ofs("test.txt")
-
-                /*if (!fout.is_open()) // если файл небыл открыт
-                {
-                    cout << "Файл не может быть открыт или создан\n"; // напечатать соответствующее сообщение
-                    return 1; // выполнить выход из программы
-                }*/
+           {
+            ofstream fout("data.txt", ios_base::out);
             
+            if (pipe.d > 0)
+            {
+                fout << "PIPELINE" << endl;
+                fout << "ID" << setw(10) << "Diameter" << setw(10) << "Length" << setw(10) << "Repair?" << endl;
+                fout << pipe.id << setw(5) << pipe.d << setw(15) << pipe.l << setw(10) << pipe.Repair << endl << endl;
+            }
 
+            else
+            {
+                fout << "No pipeline in base." << endl << endl;
+            }   
+
+            if (station.shops > 0)
+            {
+                fout << "STATION" << endl;
+                fout << "ID" << setw(15) << "Name" << setw(20) << "Shops" << setw(20) << "Working shops" << setw(20) << "Effectiveness" << endl;
+                fout << station.id << setw(15) << station.station_name << setw(20) << station.shops << setw(20) << station.working_shops << setw(20) << station.effect << endl << endl;
+            }
+            else
+            {
+                fout << "No station in base." << endl << endl;
+            }
+            
+            fout.close();
             break;
+           }
         case 7:
             //fstream
             break;
