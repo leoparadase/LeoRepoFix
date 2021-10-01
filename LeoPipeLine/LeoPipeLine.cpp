@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <iomanip>
+//#include <iomanip> // зачем?
 using namespace std;
 
 struct Pipe
@@ -352,91 +352,81 @@ int main()
             }
         case 6:
            {
-            ofstream fout("data.txt", ios_base::out);
-            
-            if (!fout)
-            {
-                cout << "Can't open file.";
-            }
-            else
-            {
-                if (pipe.d > 0)
-            {
-                //fout << "PIPELINE" << endl;
-                //fout << "ID" << setw(10) << "Diameter" << setw(10) << "Length" << setw(10) << "Repair?" << endl;
-                fout << pipe.id << "\t" << pipe.d << "\t" << pipe.l << "\t" << pipe.Repair << endl << endl;
-            }
+            ofstream file;
+            file.open("data.txt", ios_base::out);
 
-            else
-            {
-                cout << "No pipeline in base." << endl << endl;
-            }   
+            if (file.good())
+                {
+                    if (pipe.d > 0)
+                    {
+                        file << "PIPELINE" << endl
+                            << pipe.id << endl
+                            << pipe.l << endl
+                            << pipe.d << endl
+                            << pipe.Repair << endl; 
+                    }
+                    else
+                    {
+                        cout << "No pipelane in base.";
+                    }     
 
-            if (station.shops > 0)
-            {
-                //fout << "STATION" << endl;
-                //fout << "ID" << setw(15) << "Name" << setw(20) << "Shops" << setw(20) << "Working shops" << setw(20) << "Effectiveness" << endl;
-                fout << station.id << "\t" << station.station_name << "\t" << station.shops << "\t" << station.working_shops << "\t" << station.effect << endl << endl;
-                cout << "File saved." << endl << endl;
-            }
-            else
-            {
-                cout << "No station in base." << endl << endl;
-            }
-            
-            fout.close();
-            }
+                    if (station.shops > 0)
+                    {
+                        file << "STATION" << endl
+                            << station.id << endl
+                            << station.station_name << endl
+                            << station.shops << endl
+                            << station.working_shops << endl
+                            << station.effect<< endl;
+                    }
+                    else
+                    {
+                        cout << "No station in base." << endl << endl;
+                    }
+                }
+            file.close();
+            cout << "Saved." << endl << endl;
             break;
            }
         case 7:
             {
-                int k = 0;
-                ifstream fin("data.txt");
-
-                if (!fin)
+                ifstream file;
+                file.open("data.txt", ios::in);
+                if (file.good()) 
                 {
-                   cout << "Can't open file."; 
-                }
-                else
-                {
-                    while (fin)
+                    while (!file.eof()) 
                     {
-                        string strIn;
-                        fin >> strIn;
-
-                        istringstream iss(strIn);
-
-                        if (strIn == "\n")
+                        string str;
+                        getline(file, str);
+                        if (str == "PIPELINE") 
                         {
-                            k++;
-                        }
-                        else
-                        {
-                            switch (k)
+                            string value;
+                            getline(file, value);
+                            pipe.id = stoi(value);
+                            getline(file, value);
+                            //pipe.l = stod(DotToComma(value));
+                            getline(file, value);
+                            pipe.d = stoi(value);
+                            getline(file, value);
+                            if (value == 1)
                             {
-                                case 0:
-                                    {
-                                        iss >> pipe.id >> pipe.d >> pipe.l >> pipe.Repair;
-                                        break;
-                                    }
-                                case 1:
-                                    {
-                                        iss >> station.id >> station.station_name >> station.shops >> station.working_shops >> station.effect;
-                                        break;
-                                    }
+                                pipe.Repair = true;
+                            }   
+                            else
+                            {
+                                pipe.Repair = false;
                             }
-                        }
-                    }
-                    cout << "File loaded." << endl << endl;
-                }
-                
-                fin.close();
-                break;
+                            break;
             }
         case 8:
             return 0;
             break;
+        default:
+            break;
         }
 
     } 
+}
+        }
+    }
 }
