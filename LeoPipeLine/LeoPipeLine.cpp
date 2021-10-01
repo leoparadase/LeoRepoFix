@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
-//#include <iomanip> // зачем?
+#include <string>
+#include "LeoPipeLine.h"
+
 using namespace std;
 
 struct Pipe
@@ -159,7 +161,7 @@ Pipe Create_pipe()
     cout << "Is repair? ";
     p.Repair = isBool();
 
-    cout << endl;
+    cout << endl << "Pipeline added." << endl << endl;
 
     return p;
 }
@@ -195,9 +197,44 @@ Station Create_station()
     cout << "Effectiveness: ";
     st.effect = isEffect();
 
-    cout << endl;
+    cout << endl << "Station added." << endl << endl;
 
     return st;
+}
+
+void PrintMenu()
+{
+    cout << "Choose the action:" << endl << endl;
+
+    cout << "1. Add a pipeline" << endl;
+    cout << "2. Add a station" << endl;
+    cout << "3. See all" << endl;
+    cout << "4. Modify the pipeline" << endl;
+    cout << "5. Modify the station" << endl;
+    cout << "6. Save to file" << endl;
+    cout << "7. Load from file" << endl;
+    cout << "8. Quit" << endl << endl;
+}
+
+void PrintPipeEdit()
+{
+    cout << "What to edit?" << endl << endl;
+
+    cout << "1. Diameter" << endl;
+    cout << "2. Length" << endl;
+    cout << "3. Repair status" << endl;
+    cout << "4. Back to Home" << endl;
+}
+
+void PrintStationEdit()
+{
+    cout << "What to edit?" << endl << endl;
+
+    cout << "1. Station name" << endl;
+    cout << "2. Shops" << endl;
+    cout << "3. Working shops" << endl;
+    cout << "4. Effectiveness" << endl;
+    cout << "5. Back to Home" << endl;
 }
 
 int main()
@@ -208,32 +245,24 @@ int main()
     while (1)
     {
         int a = 0;
-        
-        cout << "Hi! Choose the action:" << endl << endl;
-
-        cout << "1. Add a pipeline" << endl;
-        cout << "2. Add a station" << endl;
-        cout << "3. See all" << endl;
-        cout << "4. Modify the pipeline" << endl;
-        cout << "5. Modify the station" << endl;
-        cout << "6. Save to file" << endl;
-        cout << "7. Load from file" << endl;
-        cout << "8. Quit" << endl << endl;
-
+        PrintMenu();
         a = isInt();
         cout << endl;
 
         switch (a)
         {
         case 1:
+        {
             pipe = Create_pipe();
-            cout << "Pipeline added." << endl << endl;
             break;
+        }
         case 2:
+        {
             station = Create_station();
-            cout << "Station added." << endl << endl;
             break;
+        }
         case 3:
+        {
             if (pipe.d > 0)
             {
                 PipeOutput(pipe);
@@ -242,7 +271,7 @@ int main()
             {
                 cout << "No pipeline in base." << endl << endl;
             };
-            
+
             if (station.shops > 0)
             {
                 StationOutput(station);
@@ -252,38 +281,41 @@ int main()
                 cout << "No station in base." << endl << endl;
             };
             break;
+        }
         case 4: 
             {
             int b = 0;
 
             if (pipe.d > 0)
             {
-                cout << "What to edit?" << endl << endl;
-
-                cout << "1. Diameter" << endl;
-                cout << "2. Length" << endl;
-                cout << "3. Repair status" << endl;
-                cout << "4. Back to Home" << endl;
-                
+                PrintPipeEdit();
                 b = isInt();
                 cout << endl;
             
                 switch(b)
                 {
                 case 1:
+                {
                     cout << "New diameter: ";
                     pipe.d = isInt();
                     break;
+                }
                 case 2:
+                {
                     cout << "New lentgh: ";
                     pipe.l = isFloat();
                     break;
+                }
                 case 3:
+                {
                     cout << "Is repair? ";
                     pipe.Repair = isBool();
                     break;
+                }
                 case 4:
+                {
                     break;
+                }
                 }
             }
             else
@@ -298,27 +330,24 @@ int main()
 
             if (station.shops > 0)
             {
-                cout << "What to edit?" << endl << endl;
-
-                cout << "1. Station name" << endl;
-                cout << "2. Shops" << endl;
-                cout << "3. Working shops" << endl;
-                cout << "4. Effectiveness" << endl;
-                cout << "5. Back to Home" << endl;
-                
+                PrintStationEdit();
                 c = isInt();
                 cout << endl;
             
                 switch(c)
                 {
                 case 1:
+                {
                     cout << "New station name: ";
                     station.station_name = isInt();
                     break;
+                }
                 case 2:
+                {
                     cout << "New number of shops: ";
                     station.shops = isInt();
                     break;
+                }
                 case 3:
                 {
                     while(1)
@@ -337,11 +366,15 @@ int main()
                     break;
                 }
                 case 4:
+                {
                     cout << "New effectiveness: ";
                     station.effect = isEffect();
                     break;
+                }
                 case 5:
+                {
                     break;
+                }
                 }
             }
             else
@@ -389,44 +422,66 @@ int main()
             break;
            }
         case 7:
+        {
+            ifstream file;
+            file.open("data.txt", ios::in);
+            if (file.good())
             {
-                ifstream file;
-                file.open("data.txt", ios::in);
-                if (file.good()) 
+                while (!file.eof())
                 {
-                    while (!file.eof()) 
+                    string str;
+                    getline(file, str);
+                    if (str == "PIPELINE")
                     {
-                        string str;
-                        getline(file, str);
-                        if (str == "PIPELINE") 
+                        string value;
+                        getline(file, value);
+                        pipe.id = stoi(value);
+                        getline(file, value);
+                        pipe.l = stof(value);
+                        getline(file, value);
+                        pipe.d = stoi(value);
+                        getline(file, value);
+                        if (value == "1")
                         {
-                            string value;
-                            getline(file, value);
-                            pipe.id = stoi(value);
-                            getline(file, value);
-                            //pipe.l = stod(DotToComma(value));
-                            getline(file, value);
-                            pipe.d = stoi(value);
-                            getline(file, value);
-                            if (value == 1)
-                            {
-                                pipe.Repair = true;
-                            }   
-                            else
-                            {
-                                pipe.Repair = false;
-                            }
-                            break;
+                            pipe.Repair = true;
+                        }
+                        else
+                        {
+                            pipe.Repair = false;
+                        }
+                    }
+
+                    if (str == "STATION")
+                    {
+                        string value;
+                        getline(file, value);
+                        station.id = stoi(value);
+                        getline(file, value);
+                        station.station_name = value;
+                        getline(file, value);
+                        station.shops = stoi(value);
+                        getline(file, value);
+                        station.working_shops = stoi(value);
+                        getline(file, value);
+                        station.effect = stoi(value);
+                    }
+                }
+                cout << "Loaded." << endl << endl;
             }
+            break;
+        }
         case 8:
+        {
             return 0;
             break;
+        }
         default:
+        {
+            cout << "Invalid number. Try again." << endl << endl;
             break;
+        }
         }
 
     } 
 }
-        }
-    }
-}
+      

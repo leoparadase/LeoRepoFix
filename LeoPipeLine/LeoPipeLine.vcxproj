@@ -141,6 +141,9 @@
   <ItemGroup>
     <ClCompile Include="LeoPipeLine.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LeoPipeLine.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
