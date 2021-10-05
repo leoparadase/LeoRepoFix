@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "LeoPipeLine.h"
+//#include "LeoPipeLine.h"
 
 using namespace std;
 
@@ -213,7 +213,7 @@ void PrintMenu()
     cout << "5. Modify the station" << endl;
     cout << "6. Save to file" << endl;
     cout << "7. Load from file" << endl;
-    cout << "8. Quit" << endl << endl;
+    cout << "0. Quit" << endl << endl;
 }
 
 void PrintPipeEdit()
@@ -470,7 +470,7 @@ int main()
             }
             break;
         }
-        case 8:
+        case 0:
         {
             return 0;
             break;
