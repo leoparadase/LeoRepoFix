@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-//#include "LeoPipeLine.h"
+#include "LeoPipeLine.h"
 
 using namespace std;
 
@@ -237,6 +237,170 @@ void PrintStationEdit()
     cout << "5. Back to Home" << endl;
 }
 
+void PipeEdit(int b, Pipe& pipe)
+{
+    switch (b)
+    {
+    case 1:
+    {
+        cout << "New diameter: ";
+        pipe.d = isInt();
+        break;
+    }
+    case 2:
+    {
+        cout << "New lentgh: ";
+        pipe.l = isFloat();
+        break;
+    }
+    case 3:
+    {
+        cout << "Is repair? ";
+        pipe.Repair = isBool();
+        break;
+    }
+    case 4:
+    {
+        break;
+    }
+    }
+}
+
+void StationEdit(int c, Station& station)
+{
+    switch (c)
+    {
+    case 1:
+    {
+        cout << "New station name: ";
+        station.station_name = isInt();
+        break;
+    }
+    case 2:
+    {
+        cout << "New number of shops: ";
+        station.shops = isInt();
+        break;
+    }
+    case 3:
+    {
+        while (1)
+        {
+            int sh = station.working_shops;
+            cout << "New number of working shops: ";
+            station.working_shops = isInt();
+            if (station.working_shops > station.shops)
+            {
+                cout << "Number of working shops can't be more than number of all shops. Enter again: ";
+                station.working_shops = sh;
+
+            }
+            else break;
+        }
+        break;
+    }
+    case 4:
+    {
+        cout << "New effectiveness: ";
+        station.effect = isEffect();
+        break;
+    }
+    case 5:
+    {
+        break;
+    }
+    }
+}
+
+void OutputInFile(Pipe& pipe, Station& station, int& retflag)
+{
+    retflag = 1;
+    ofstream file;
+    file.open("data.txt", ios_base::out);
+
+    if (file.good())
+    {
+        if (pipe.d > 0)
+        {
+            file << "PIPELINE" << endl
+                << pipe.id << endl
+                << pipe.l << endl
+                << pipe.d << endl
+                << pipe.Repair << endl;
+        }
+        else
+        {
+            cout << "No pipelane in base.";
+        }
+
+        if (station.shops > 0)
+        {
+            file << "STATION" << endl
+                << station.id << endl
+                << station.station_name << endl
+                << station.shops << endl
+                << station.working_shops << endl
+                << station.effect << endl;
+        }
+        else
+        {
+            cout << "No station in base." << endl << endl;
+        }
+    }
+    file.close();
+    cout << "Saved." << endl << endl;
+    { retflag = 2; return; };
+}
+
+void LoadFromFile(Pipe& pipe, Station& station)
+{
+    ifstream file;
+    file.open("data.txt", ios::in);
+    if (file.good())
+    {
+        while (!file.eof())
+        {
+            string str;
+            getline(file, str);
+            if (str == "PIPELINE")
+            {
+                string value;
+                getline(file, value);
+                pipe.id = stoi(value);
+                getline(file, value);
+                pipe.l = stof(value);
+                getline(file, value);
+                pipe.d = stoi(value);
+                getline(file, value);
+                if (value == "1")
+                {
+                    pipe.Repair = true;
+                }
+                else
+                {
+                    pipe.Repair = false;
+                }
+            }
+
+            if (str == "STATION")
+            {
+                string value;
+                getline(file, value);
+                station.id = stoi(value);
+                getline(file, value);
+                station.station_name = value;
+                getline(file, value);
+                station.shops = stoi(value);
+                getline(file, value);
+                station.working_shops = stoi(value);
+                getline(file, value);
+                station.effect = stoi(value);
+            }
+        }
+        cout << "Loaded." << endl << endl;
+    }
+}
+
 int main()
 {
     Pipe pipe = {};
@@ -292,31 +456,7 @@ int main()
                 b = isInt();
                 cout << endl;
             
-                switch(b)
-                {
-                case 1:
-                {
-                    cout << "New diameter: ";
-                    pipe.d = isInt();
-                    break;
-                }
-                case 2:
-                {
-                    cout << "New lentgh: ";
-                    pipe.l = isFloat();
-                    break;
-                }
-                case 3:
-                {
-                    cout << "Is repair? ";
-                    pipe.Repair = isBool();
-                    break;
-                }
-                case 4:
-                {
-                    break;
-                }
-                }
+                PipeEdit(b, pipe);
             }
             else
             {
@@ -334,48 +474,7 @@ int main()
                 c = isInt();
                 cout << endl;
             
-                switch(c)
-                {
-                case 1:
-                {
-                    cout << "New station name: ";
-                    station.station_name = isInt();
-                    break;
-                }
-                case 2:
-                {
-                    cout << "New number of shops: ";
-                    station.shops = isInt();
-                    break;
-                }
-                case 3:
-                {
-                    while(1)
-                    {
-                    int sh = station.working_shops;
-                    cout << "New number of working shops: ";
-                    station.working_shops = isInt();
-                    if (station.working_shops > station.shops)
-                        {
-                            cout << "Number of working shops can't be more than number of all shops. Enter again: ";
-                            station.working_shops = sh;
-                            
-                        }
-                    else break;
-                    }
-                    break;
-                }
-                case 4:
-                {
-                    cout << "New effectiveness: ";
-                    station.effect = isEffect();
-                    break;
-                }
-                case 5:
-                {
-                    break;
-                }
-                }
+                StationEdit(c, station);
             }
             else
             {
@@ -385,89 +484,13 @@ int main()
             }
         case 6:
            {
-            ofstream file;
-            file.open("data.txt", ios_base::out);
-
-            if (file.good())
-                {
-                    if (pipe.d > 0)
-                    {
-                        file << "PIPELINE" << endl
-                            << pipe.id << endl
-                            << pipe.l << endl
-                            << pipe.d << endl
-                            << pipe.Repair << endl; 
-                    }
-                    else
-                    {
-                        cout << "No pipelane in base.";
-                    }     
-
-                    if (station.shops > 0)
-                    {
-                        file << "STATION" << endl
-                            << station.id << endl
-                            << station.station_name << endl
-                            << station.shops << endl
-                            << station.working_shops << endl
-                            << station.effect<< endl;
-                    }
-                    else
-                    {
-                        cout << "No station in base." << endl << endl;
-                    }
-                }
-            file.close();
-            cout << "Saved." << endl << endl;
-            break;
+            int retflag;
+            OutputInFile(pipe, station, retflag);
+            if (retflag == 2) break;
            }
         case 7:
         {
-            ifstream file;
-            file.open("data.txt", ios::in);
-            if (file.good())
-            {
-                while (!file.eof())
-                {
-                    string str;
-                    getline(file, str);
-                    if (str == "PIPELINE")
-                    {
-                        string value;
-                        getline(file, value);
-                        pipe.id = stoi(value);
-                        getline(file, value);
-                        pipe.l = stof(value);
-                        getline(file, value);
-                        pipe.d = stoi(value);
-                        getline(file, value);
-                        if (value == "1")
-                        {
-                            pipe.Repair = true;
-                        }
-                        else
-                        {
-                            pipe.Repair = false;
-                        }
-                    }
-
-                    if (str == "STATION")
-                    {
-                        string value;
-                        getline(file, value);
-                        station.id = stoi(value);
-                        getline(file, value);
-                        station.station_name = value;
-                        getline(file, value);
-                        station.shops = stoi(value);
-                        getline(file, value);
-                        station.working_shops = stoi(value);
-                        getline(file, value);
-                        station.effect = stoi(value);
-                    }
-                }
-                cout << "Loaded." << endl << endl;
-            }
+            LoadFromFile(pipe, station);
             break;
         }
         case 0:
