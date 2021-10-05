@@ -22,7 +22,7 @@ struct Station
     int effect;
 };
 
-int isInt() 
+int GetInt() 
 {
     while (1)
     {
@@ -42,7 +42,7 @@ int isInt()
     }
 }
 
-float isFloat() 
+float GetFloat() 
 {
     while (1)
     {
@@ -62,7 +62,7 @@ float isFloat()
     }
 }
 
-int isEffect() 
+int GetEffect() 
 {
     while (1)
     {
@@ -82,7 +82,7 @@ int isEffect()
     }
 }
 
-string isString() 
+string GetString() 
 {
     while (1)
     {
@@ -102,7 +102,7 @@ string isString()
     }
 }
 
-bool isBool() 
+bool GetBool() 
 {
     while (1)
     {
@@ -153,13 +153,13 @@ Pipe Create_pipe()
     cout << "Hey! Ready to read pipeline properties." << endl;
 
     cout << "Diameter: ";
-    p.d = isInt();
+    p.d = GetInt();
 
     cout << "Lentgh: ";
-    p.l = isFloat();
+    p.l = GetFloat();
 
     cout << "Is repair? ";
-    p.Repair = isBool();
+    p.Repair = GetBool();
 
     cout << endl << "Pipeline added." << endl << endl;
 
@@ -173,16 +173,16 @@ Station Create_station()
     cout << endl << "Hey! Ready to read station properties." << endl;
 
     cout << "Name: ";
-    st.station_name = isString();
+    st.station_name = GetString();
 
     cout << "Shops: ";
-    st.shops = isInt();
+    st.shops = GetInt();
 
     cout << "Working shops: ";
     
         while (1)
         {
-            st.working_shops = isInt();
+            st.working_shops = GetInt();
             if (st.working_shops > st.shops)
             {
                 cout << "Number of working shops can't be more than number of all shops. Enter again: ";
@@ -195,7 +195,7 @@ Station Create_station()
         }
 
     cout << "Effectiveness: ";
-    st.effect = isEffect();
+    st.effect = GetEffect();
 
     cout << endl << "Station added." << endl << endl;
 
@@ -244,19 +244,19 @@ void PipeEdit(int b, Pipe& pipe)
     case 1:
     {
         cout << "New diameter: ";
-        pipe.d = isInt();
+        pipe.d = GetInt();
         break;
     }
     case 2:
     {
         cout << "New lentgh: ";
-        pipe.l = isFloat();
+        pipe.l = GetFloat();
         break;
     }
     case 3:
     {
         cout << "Is repair? ";
-        pipe.Repair = isBool();
+        pipe.Repair = GetBool();
         break;
     }
     case 4:
@@ -273,13 +273,13 @@ void StationEdit(int c, Station& station)
     case 1:
     {
         cout << "New station name: ";
-        station.station_name = isInt();
+        station.station_name = GetInt();
         break;
     }
     case 2:
     {
         cout << "New number of shops: ";
-        station.shops = isInt();
+        station.shops = GetInt();
         break;
     }
     case 3:
@@ -288,7 +288,7 @@ void StationEdit(int c, Station& station)
         {
             int sh = station.working_shops;
             cout << "New number of working shops: ";
-            station.working_shops = isInt();
+            station.working_shops = GetInt();
             if (station.working_shops > station.shops)
             {
                 cout << "Number of working shops can't be more than number of all shops. Enter again: ";
@@ -302,7 +302,7 @@ void StationEdit(int c, Station& station)
     case 4:
     {
         cout << "New effectiveness: ";
-        station.effect = isEffect();
+        station.effect = GetEffect();
         break;
     }
     case 5:
@@ -332,14 +332,7 @@ void LoadFromFile(Pipe& pipe, Station& station)
                 getline(file, value);
                 pipe.d = stoi(value);
                 getline(file, value);
-                if (value == "1")
-                {
-                    pipe.Repair = true;
-                }
-                else
-                {
-                    pipe.Repair = false;
-                }
+                pipe.Repair = (value == "1");
             }
 
             if (str == "STATION")
@@ -394,9 +387,10 @@ void OutputInFile(Pipe& pipe, Station& station)
         {
             cout << "No station in base." << endl << endl;
         }
+        file.close();
+        cout << "Saved." << endl << endl;
     }
-    file.close();
-    cout << "Saved." << endl << endl;
+    
 }
 
 int main()
@@ -408,7 +402,7 @@ int main()
     {
         int a = 0;
         PrintMenu();
-        a = isInt();
+        a = GetInt();
         cout << endl;
 
         switch (a)
@@ -451,7 +445,7 @@ int main()
             if (pipe.d > 0)
             {
                 PrintPipeEdit();
-                b = isInt();
+                b = GetInt();
                 cout << endl;
             
                 PipeEdit(b, pipe);
@@ -464,12 +458,10 @@ int main()
             }
         case 5:
             {
-            int c = 0;
-
             if (station.shops > 0)
             {
                 PrintStationEdit();
-                c = isInt();
+                int c = GetInt();
                 cout << endl;
             
                 StationEdit(c, station);
