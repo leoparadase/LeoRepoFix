@@ -312,46 +312,6 @@ void StationEdit(int c, Station& station)
     }
 }
 
-void OutputInFile(Pipe& pipe, Station& station, int& retflag)
-{
-    retflag = 1;
-    ofstream file;
-    file.open("data.txt", ios_base::out);
-
-    if (file.good())
-    {
-        if (pipe.d > 0)
-        {
-            file << "PIPELINE" << endl
-                << pipe.id << endl
-                << pipe.l << endl
-                << pipe.d << endl
-                << pipe.Repair << endl;
-        }
-        else
-        {
-            cout << "No pipelane in base.";
-        }
-
-        if (station.shops > 0)
-        {
-            file << "STATION" << endl
-                << station.id << endl
-                << station.station_name << endl
-                << station.shops << endl
-                << station.working_shops << endl
-                << station.effect << endl;
-        }
-        else
-        {
-            cout << "No station in base." << endl << endl;
-        }
-    }
-    file.close();
-    cout << "Saved." << endl << endl;
-    { retflag = 2; return; };
-}
-
 void LoadFromFile(Pipe& pipe, Station& station)
 {
     ifstream file;
@@ -399,6 +359,44 @@ void LoadFromFile(Pipe& pipe, Station& station)
         }
         cout << "Loaded." << endl << endl;
     }
+}
+
+void OutputInFile(Pipe& pipe, Station& station)
+{
+    ofstream file;
+    file.open("data.txt", ios_base::out);
+
+    if (file.good())
+    {
+        if (pipe.d > 0)
+        {
+            file << "PIPELINE" << endl
+                << pipe.id << endl
+                << pipe.l << endl
+                << pipe.d << endl
+                << pipe.Repair << endl;
+        }
+        else
+        {
+            cout << "No pipelane in base.";
+        }
+
+        if (station.shops > 0)
+        {
+            file << "STATION" << endl
+                << station.id << endl
+                << station.station_name << endl
+                << station.shops << endl
+                << station.working_shops << endl
+                << station.effect << endl;
+        }
+        else
+        {
+            cout << "No station in base." << endl << endl;
+        }
+    }
+    file.close();
+    cout << "Saved." << endl << endl;
 }
 
 int main()
@@ -484,9 +482,8 @@ int main()
             }
         case 6:
            {
-            int retflag;
-            OutputInFile(pipe, station, retflag);
-            if (retflag == 2) break;
+            OutputInFile(pipe, station);
+            break;
            }
         case 7:
         {
