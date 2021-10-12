@@ -22,18 +22,18 @@ struct Station
     int effect;
 };
 
-int GetInt() 
+int GetInt(int min = 0, int max = INT_MAX) 
 {
     while (1)
     {
         int number;
         cin >> number;
 
-        if (cin.fail() || number < 0)
+        if (cin.fail() || number < min || number > max || cin.peek() != '\n')
         {
             cin.clear();
             cin.ignore(32767, '\n');
-            cout << "Incorrect. Enter the integer number more than 0: ";
+            cout << "Incorrect. Try again: ";
         }
         else
         {
@@ -42,38 +42,18 @@ int GetInt()
     }
 }
 
-float GetFloat() 
+float GetFloat(float min = 0, float max = FLT_MAX)
 {
     while (1)
     {
         float number;
         cin >> number;
 
-        if (cin.fail() || number < 0)
+        if (cin.fail() || number < min || number > max || cin.peek() != '\n')
         {
             cin.clear();
             cin.ignore(32767, '\n');
-            cout << "Incorrect. Enter the float number more than 0: ";
-        }
-        else
-        {
-            return number;
-        }
-    }
-}
-
-int GetEffect() 
-{
-    while (1)
-    {
-        int number;
-        cin >> number;
-
-        if (cin.fail() || number < 0 || number > 100)
-        {
-            cin.clear();
-            cin.ignore(32767, '\n');
-            cout << "Incorrect. Enter the integer number between 0 and 100: ";
+            cout << "Incorrect. Try again: ";
         }
         else
         {
@@ -86,19 +66,11 @@ string GetString()
 {
     while (1)
     {
+        cin >> ws;
         string str;
-        cin >> str;
+        getline(cin, str);
 
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(32767, '\n');
-            cout << "Incorrect. Enter the string: ";
-        }
-        else
-        {
-            return str;
-        }
+        return str;
     }
 }
 
@@ -109,11 +81,11 @@ bool GetBool()
         bool condition;
         cin >> condition;
 
-        if (cin.fail())
+        if (cin.fail() || cin.peek() != '\n')
         {
             cin.clear();
             cin.ignore(32767, '\n');
-            cout << "Incorrect. Enter True or False: ";
+            cout << "Incorrect. Try again: ";
         }
         else
         {
@@ -150,10 +122,10 @@ Pipe Create_pipe()
     Pipe p = {};
     
 
-    cout << "Hey! Ready to read pipeline properties." << endl;
+    cout << "Ready to read pipeline properties." << endl;
 
     cout << "Diameter: ";
-    p.d = GetInt();
+    p.d = GetInt(500, 3000);
 
     cout << "Lentgh: ";
     p.l = GetFloat();
@@ -170,7 +142,7 @@ Station Create_station()
 {
     Station st = {};
 
-    cout << endl << "Hey! Ready to read station properties." << endl;
+    cout << endl << "Ready to read station properties." << endl;
 
     cout << "Name: ";
     st.station_name = GetString();
@@ -179,23 +151,10 @@ Station Create_station()
     st.shops = GetInt();
 
     cout << "Working shops: ";
-    
-        while (1)
-        {
-            st.working_shops = GetInt();
-            if (st.working_shops > st.shops)
-            {
-                cout << "Number of working shops can't be more than number of all shops. Enter again: ";
-                st.working_shops = 0;
-            }
-            else
-            {
-                break;
-            }
-        }
+    st.working_shops = GetInt(0, st.shops);
 
     cout << "Effectiveness: ";
-    st.effect = GetEffect();
+    st.effect = GetInt(0,100);
 
     cout << endl << "Station added." << endl << endl;
 
@@ -244,7 +203,7 @@ void PipeEdit(int b, Pipe& pipe)
     case 1:
     {
         cout << "New diameter: ";
-        pipe.d = GetInt();
+        pipe.d = GetInt(500, 3000);
         break;
     }
     case 2:
@@ -284,25 +243,14 @@ void StationEdit(int c, Station& station)
     }
     case 3:
     {
-        while (1)
-        {
-            int sh = station.working_shops;
-            cout << "New number of working shops: ";
-            station.working_shops = GetInt();
-            if (station.working_shops > station.shops)
-            {
-                cout << "Number of working shops can't be more than number of all shops. Enter again: ";
-                station.working_shops = sh;
-
-            }
-            else break;
-        }
+        cout << "New number of working shops: ";
+        station.working_shops = GetInt(0, station.shops);
         break;
     }
     case 4:
     {
         cout << "New effectiveness: ";
-        station.effect = GetEffect();
+        station.effect = GetInt(0, 100);
         break;
     }
     case 5:
@@ -352,6 +300,10 @@ void LoadFromFile(Pipe& pipe, Station& station)
         }
         cout << "Loaded." << endl << endl;
     }
+    else
+    {
+        cout << "Can't load from file." << endl << endl;
+    }
 }
 
 void OutputInFile(Pipe& pipe, Station& station)
@@ -390,7 +342,10 @@ void OutputInFile(Pipe& pipe, Station& station)
         file.close();
         cout << "Saved." << endl << endl;
     }
-    
+    else
+    {
+        cout << "Can't save the file." << endl << endl;
+    }
 }
 
 int main()
@@ -489,7 +444,7 @@ int main()
         }
         default:
         {
-            cout << "Invalid number. Try again." << endl << endl;
+            cout << "Incorrect. Try again." << endl << endl;
             break;
         }
         }
