@@ -1,7 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
+#include <vector>
 #include "LeoPipeLine.h"
+#include "StreamTable.h"
 
 using namespace std;
 
@@ -120,7 +123,6 @@ void StationOutput(Station& s)
 Pipe Create_pipe()
 {
     Pipe p = {};
-    
 
     cout << "Ready to read pipeline properties." << endl;
 
@@ -353,6 +355,11 @@ int main()
     Pipe pipe = {};
     Station station = {};
 
+    vector <Pipe> Pipes;
+    vector <Station> Stations;
+
+    StreamTable table(cout);
+
     while (1)
     {
         int a = 0;
@@ -365,31 +372,65 @@ int main()
         case 1:
         {
             pipe = Create_pipe();
+            pipe.id = Pipes.size() + 1;
+            Pipes.push_back(pipe);
             break;
         }
         case 2:
         {
             station = Create_station();
+            station.id = Stations.size() + 1;
+            Stations.push_back(station);
             break;
         }
-        case 3:
+        case 3: // show all in table
         {
-            if (pipe.d > 0)
+            if (!Pipes.empty())
             {
-                PipeOutput(pipe);
+                //PipeOutput(pipe);
+
+                table.Clear();
+                table.SetCols(4, 12);
+
+                table.MakeBorderExt(true);
+                table.SetDelimRow(true, '-');
+                table.SetDelimCol(true, '|');
+
+                table << "ID" << "Diameter" << "Length" << "Repairing?";
+
+                for (int i = 0; i < Pipes.size(); i++) {
+                    table << Pipes[i].id << Pipes[i].d << Pipes[i].l << Pipes[i].Repair;
+                }
             }
             else
             {
-                cout << "No pipeline in base." << endl << endl;
+                cout << "No pipelines in base." << endl << endl;
             };
 
             if (station.shops > 0)
             {
-                StationOutput(station);
+                //StationOutput(station);
+
+                table.Clear();
+                table.AddCol(5);
+                table.AddCol(15);
+                table.AddCol(10);
+                table.AddCol(10);
+                table.AddCol(15);
+
+                table.MakeBorderExt(true);
+                table.SetDelimRow(true, '-');
+                table.SetDelimCol(true, '|');
+
+                table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
+
+                for (int i = 0; i < Stations.size(); i++) {
+                    table << Stations[i].id << Stations[i].station_name << Stations[i].shops << Stations[i].working_shops << Stations[i].effect;
+                }
             }
             else
             {
-                cout << "No station in base." << endl << endl;
+                cout << "No stations in base." << endl << endl;
             };
             break;
         }

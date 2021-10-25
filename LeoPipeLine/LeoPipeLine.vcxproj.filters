@@ -23,5 +23,8 @@
     <ClInclude Include="LeoPipeLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StreamTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
