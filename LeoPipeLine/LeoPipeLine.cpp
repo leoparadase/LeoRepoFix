@@ -167,14 +167,15 @@ void PrintMenu()
 {
     cout << "Choose the action:" << endl << endl;
 
-    cout << "1. Add a pipeline" << endl;
-    cout << "2. Add a station" << endl;
-    cout << "3. See all" << endl;
-    cout << "4. Modify the pipeline" << endl;
-    cout << "5. Modify the station" << endl;
-    cout << "6. Save to file" << endl;
-    cout << "7. Load from file" << endl;
-    cout << "0. Quit" << endl << endl;
+    cout << "1. Show pipelines" << endl
+        << "2. Show stations" << endl
+        << "3. Search pipelines" << endl
+        << "4. Search stations" << endl
+        << "5. Multiple pipeline editing" << endl
+        << "6. Multiple station editing" << endl
+        << "7. Save to file" << endl
+        << "8. Load from file" << endl
+        << "0. Quit" << endl << endl;
 }
 
 void PrintPipeEdit()
@@ -357,8 +358,13 @@ int main()
 
     vector <Pipe> Pipes;
     vector <Station> Stations;
+    vector <int> picked_ids;
 
     StreamTable table(cout);
+
+    int id;
+    int p_id_count = 0;
+    int s_id_count = 0;
 
     while (1)
     {
@@ -368,6 +374,396 @@ int main()
         cout << endl;
 
         switch (a)
+        {
+        case 1: // show pipelines. if no pipelines, then add only
+        {
+            if (!Pipes.empty())
+            {
+                // !!! put in function with giving vector
+                table.Clear();
+                table.SetCols(4, 12);
+
+                table.MakeBorderExt(true);
+                table.SetDelimRow(true, '-');
+                table.SetDelimCol(true, '|');
+
+                cout << "Pipelines:" << endl << endl;
+
+                table << "ID" << "Diameter" << "Length" << "Repairing?";
+
+                for (int i = 0; i < Pipes.size(); i++) {
+                    table << Pipes[i].id << Pipes[i].d << Pipes[i].l << Pipes[i].Repair;
+                }
+
+                cout << endl << endl;
+
+                cout << "What to do?" << endl
+                    << "1. Add exciting pipeline" << endl
+                    << "2. Modify" << endl
+                    << "3. Delete" << endl
+                    << "0. Back to home" << endl << endl;
+                
+                a = GetInt();
+                cout << endl;
+
+                switch(a)
+                {
+                    case 1:
+                    {
+                        pipe = Create_pipe();
+                        pipe.id = p_id_count++;
+                        Pipes.push_back(pipe);
+                        break;
+                    }
+                    case 2:
+                    {
+                        cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
+                        id = GetInt();
+                        while (id != NULL)
+                        {
+                            picked_ids.push_back(id);
+                            cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
+                            id = GetInt();
+                        }
+                        if (!picked_ids.empty())
+                        {
+                            cout << "What repairing status you want to set?" << endl
+                                << "1. All in repair" << endl
+                                << "2. All in use" << endl
+                                << "0. Back to home" << endl << endl;
+
+                            a = GetInt(-1,3);
+                            cout << endl;
+
+                            switch (a)
+                            {
+                            case 1:
+                            {
+                                for (int i = 0; i < picked_ids.size(); i++) {
+                                    for (int j = 0; j < Pipes.size(); j++) {
+                                        if (Pipes[j].id == picked_ids[i])
+                                        {
+                                            Pipes[j].Repair = 1;
+                                        }
+                                    }
+                                }
+                                picked_ids.clear();
+                                break;
+                            }
+                            case 2:
+                            {
+                                for (int i = 0; i < picked_ids.size(); i++) {
+                                    for (int j = 0; j < Pipes.size(); j++) {
+                                        if (Pipes[j].id == picked_ids[i])
+                                        {
+                                            Pipes[j].Repair = 0;
+                                        }
+                                    }
+                                }
+                                picked_ids.clear();
+                                break;
+                            }
+                            case 0:
+                            {
+                                break;
+                            }
+                            }
+                        }
+                        else
+                        {
+                            cout << "Nothing entered. Return to home..." << endl << endl;
+                        }
+                        break;
+                    }
+                    case 3:
+                    {
+                        cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
+                        id = GetInt();
+                        while (id != NULL)
+                        {
+                            picked_ids.push_back(id);
+                            cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
+                            id = GetInt();
+                        }
+                        if (!picked_ids.empty())
+                        {
+                            cout << "Are you sure to delete?" << endl
+                                << "1. Yes" << endl
+                                << "2. No" << endl << endl;
+                            
+
+                            a = GetInt(0, 3);
+                            cout << endl;
+
+                            switch (a)
+                            {
+                            case 1:
+                            {
+                                for (int i = 0; i < picked_ids.size(); i++) {
+                                    for (int j = 0; j < Pipes.size(); j++) {
+                                        if (Pipes[j].id == picked_ids[i])
+                                        {
+                                            Pipes.erase(Pipes.begin() + j);
+                                        }
+                                    }
+                                }
+                                picked_ids.clear();
+                                break;
+                            }
+                            case 2:
+                            {
+                                break;
+                            }
+                            }
+                        }
+                    }
+                }
+                // done. check input
+            }
+            else
+            {
+            cout << "No pipelines. Want to add?" << endl 
+                << "1. Yes" << endl
+                << "2. No" << endl << endl;
+
+
+            a = GetInt(0, 3);
+            cout << endl;
+
+            switch (a)
+            {
+            case 1:
+            {
+                pipe = Create_pipe();
+                pipe.id = p_id_count++;
+                Pipes.push_back(pipe);
+                break;
+                break;
+            }
+            case 2:
+            {
+                break;
+            }
+            }
+            }
+            break;
+        }
+        case 2: // show stations. if no stations, then add only
+        {
+            if (!Stations.empty())
+            {
+                // !!! put in function with giving vector
+                table.Clear();
+                table.AddCol(5);
+                table.AddCol(15);
+                table.AddCol(10);
+                table.AddCol(10);
+                table.AddCol(15);
+
+                table.MakeBorderExt(true);
+                table.SetDelimRow(true, '-');
+                table.SetDelimCol(true, '|');
+
+                table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
+
+                for (int i = 0; i < Stations.size(); i++) {
+                    table << Stations[i].id << Stations[i].station_name << Stations[i].shops << Stations[i].working_shops << Stations[i].effect;
+            }
+                cout << "What to do?" << endl
+                    << "1. Add exciting station" << endl
+                    << "2. Modify" << endl
+                    << "3. Delete" << endl
+                    << "0. Back to home" << endl << endl;
+
+                a = GetInt();
+                cout << endl;
+
+                switch (a)
+                {
+                case 1:
+                {
+                    station = Create_station();
+                    station.id = s_id_count++;
+                    Stations.push_back(station);
+                    break;
+                }
+                case 2:
+                {
+                    cout << "Enter IDs of stations. One by one, after each ID press ENTER:" << endl; // single id!!!
+                    id = GetInt();
+                    while (id != NULL)
+                    {
+                        picked_ids.push_back(id);
+                        cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
+                        id = GetInt();
+                    }
+                    if (!picked_ids.empty())
+                    {
+                        cout << "What repairing status you want to set?" << endl // change number of wsh only
+                            << "1. All in repair" << endl
+                            << "2. All in use" << endl
+                            << "0. Back to home" << endl << endl;
+
+                        a = GetInt(-1, 3);
+                        cout << endl;
+
+                        switch (a)
+                        {
+                        case 1:
+                        {
+                            for (int i = 0; i < picked_ids.size(); i++) {
+                                for (int j = 0; j < Stations.size(); j++) {
+                                    if (Stations[j].id == picked_ids[i])
+                                    {
+                                        Stations[j].working_shops = 1; // do check on working shops
+                                    }
+                                }
+                            }
+                            picked_ids.clear();
+                            break;
+                        }
+                        case 2:
+                        {
+                            for (int i = 0; i < picked_ids.size(); i++) {
+                                for (int j = 0; j < Stations.size(); j++) {
+                                    if (Stations[j].id == picked_ids[i])
+                                    {
+                                        Stations[j].working_shops = 0;
+                                    }
+                                }
+                            }
+                            picked_ids.clear();
+                            break;
+                        }
+                        case 0:
+                        {
+                            break;
+                        }
+                        }
+                    }
+                    else
+                    {
+                        cout << "Nothing entered. Return to home..." << endl << endl;
+                    }
+                    break;
+                }
+                case 3:
+                {
+                    cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
+                    id = GetInt();
+                    while (id != NULL)
+                    {
+                        picked_ids.push_back(id);
+                        cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
+                        id = GetInt();
+                    }
+                    if (!picked_ids.empty())
+                    {
+                        cout << "Are you sure to delete?" << endl
+                            << "1. Yes" << endl
+                            << "2. No" << endl << endl;
+
+
+                        a = GetInt(0, 3);
+                        cout << endl;
+
+                        switch (a)
+                        {
+                        case 1:
+                        {
+                            for (int i = 0; i < picked_ids.size(); i++) {
+                                for (int j = 0; j < Stations.size(); j++) {
+                                    if (Stations[j].id == picked_ids[i])
+                                    {
+                                        Stations.erase(Stations.begin() + j);
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        case 2:
+                        {
+                            break;
+                        }
+                        }
+                    }
+                }
+                }
+            //what to do?
+            //1. add exciting
+            //2. modify one
+            //3. delete one
+            }
+            else
+            {
+            cout << "No stations. Want to add?" << endl
+                << "1. Yes" << endl
+                << "2. No" << endl << endl;
+
+
+            a = GetInt(0, 3);
+            cout << endl;
+
+            switch (a)
+            {
+            case 1:
+            {
+                station = Create_station();
+                station.id = s_id_count++;
+                Stations.push_back(station);
+                break;
+            }
+            case 2:
+            {
+                break;
+            }
+            }
+            }
+            break;
+        }
+        case 3: // search pipelines. if no pipelines, then unavailible
+        {
+            // by ID
+            // by Repairing status
+            break;
+        }
+        case 4: // search stations. if no stations, then unavailible
+        {
+            // by Name
+            // by % of working shops
+            break;
+        }
+        case 5: // multiple pipeline editing. if no pipelines, then unavailible
+        {
+            // by entered IDs
+            // by search results 
+            break;
+        }
+        case 6: // multiple station editing. if no stations, then unavailible
+        {
+            // by entered IDs
+            // by search results
+            break;
+        }
+        case 7: // save to file w/custom name
+        {
+            break;
+        }
+        case 8: // load from file w/custom name
+        {
+            break;
+        }
+        case 0:
+        {
+            return 0;
+        }
+        default: // big ass cunt
+        {
+            break;
+        }
+        }
+
+        /*switch (a)
         {
         case 1:
         {
@@ -396,11 +792,15 @@ int main()
                 table.SetDelimRow(true, '-');
                 table.SetDelimCol(true, '|');
 
+                cout << "Pipelines:" << endl << endl;
+
                 table << "ID" << "Diameter" << "Length" << "Repairing?";
 
                 for (int i = 0; i < Pipes.size(); i++) {
                     table << Pipes[i].id << Pipes[i].d << Pipes[i].l << Pipes[i].Repair;
                 }
+
+                cout << endl << endl;
             }
             else
             {
@@ -488,7 +888,7 @@ int main()
             cout << "Incorrect. Try again." << endl << endl;
             break;
         }
-        }
+        }*/
 
     } 
 }
