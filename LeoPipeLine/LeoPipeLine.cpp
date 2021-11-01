@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "LeoPipeLine.h"
 #include "StreamTable.h"
 
@@ -129,7 +130,7 @@ Pipe Create_pipe()
     cout << "Diameter: ";
     p.d = GetInt(500, 3000);
 
-    cout << "Lentgh: ";
+    cout << "Length: ";
     p.l = GetFloat();
 
     cout << "Is repair? ";
@@ -171,10 +172,8 @@ void PrintMenu()
         << "2. Show stations" << endl
         << "3. Search pipelines" << endl
         << "4. Search stations" << endl
-        << "5. Multiple pipeline editing" << endl
-        << "6. Multiple station editing" << endl
-        << "7. Save to file" << endl
-        << "8. Load from file" << endl
+        << "5. Save to file" << endl
+        << "6. Load from file" << endl
         << "0. Quit" << endl << endl;
 }
 
@@ -356,26 +355,36 @@ int main()
     Pipe pipe = {};
     Station station = {};
 
-    vector <Pipe> Pipes;
-    vector <Station> Stations;
-    vector <int> picked_ids;
+    //vector <Pipe> Pipes;
+    //vector <Station> Stations;
+    vector <Pipe> vec_picked_p;
+    vector <Station> vec_picked_s;
+    vector <int> vec_picked_ids;
+
+    unordered_map <int, Pipe> Pipes = {};
+    unordered_map <int, Station> Stations = {};
+
+    unordered_map <int, Pipe> ::iterator it_pipe = Pipes.begin();
+    unordered_map <int, Station> ::iterator it_station = Stations.begin();
 
     StreamTable table(cout);
 
     int id;
     int p_id_count = 0;
     int s_id_count = 0;
+    string str;
 
     while (1)
     {
         int a = 0;
+
         PrintMenu();
-        a = GetInt();
+        a = GetInt(0, 8);
         cout << endl;
 
         switch (a)
         {
-        case 1: // show pipelines. if no pipelines, then add only
+        case 1: // show pipelines.
         {
             if (!Pipes.empty())
             {
@@ -391,8 +400,10 @@ int main()
 
                 table << "ID" << "Diameter" << "Length" << "Repairing?";
 
-                for (int i = 0; i < Pipes.size(); i++) {
-                    table << Pipes[i].id << Pipes[i].d << Pipes[i].l << Pipes[i].Repair;
+                it_pipe = Pipes.begin();
+
+                for (int i = 0; it_pipe != Pipes.end(); it_pipe++) {
+                    table << it_pipe->second.id << it_pipe->second.d << it_pipe->second.l << it_pipe->second.Repair;
                 }
 
                 cout << endl << endl;
@@ -402,237 +413,71 @@ int main()
                     << "2. Modify" << endl
                     << "3. Delete" << endl
                     << "0. Back to home" << endl << endl;
-                
-                a = GetInt();
-                cout << endl;
 
-                switch(a)
-                {
-                    case 1:
-                    {
-                        pipe = Create_pipe();
-                        pipe.id = p_id_count++;
-                        Pipes.push_back(pipe);
-                        break;
-                    }
-                    case 2:
-                    {
-                        cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
-                        id = GetInt();
-                        while (id != NULL)
-                        {
-                            picked_ids.push_back(id);
-                            cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
-                            id = GetInt();
-                        }
-                        if (!picked_ids.empty())
-                        {
-                            cout << "What repairing status you want to set?" << endl
-                                << "1. All in repair" << endl
-                                << "2. All in use" << endl
-                                << "0. Back to home" << endl << endl;
-
-                            a = GetInt(-1,3);
-                            cout << endl;
-
-                            switch (a)
-                            {
-                            case 1:
-                            {
-                                for (int i = 0; i < picked_ids.size(); i++) {
-                                    for (int j = 0; j < Pipes.size(); j++) {
-                                        if (Pipes[j].id == picked_ids[i])
-                                        {
-                                            Pipes[j].Repair = 1;
-                                        }
-                                    }
-                                }
-                                picked_ids.clear();
-                                break;
-                            }
-                            case 2:
-                            {
-                                for (int i = 0; i < picked_ids.size(); i++) {
-                                    for (int j = 0; j < Pipes.size(); j++) {
-                                        if (Pipes[j].id == picked_ids[i])
-                                        {
-                                            Pipes[j].Repair = 0;
-                                        }
-                                    }
-                                }
-                                picked_ids.clear();
-                                break;
-                            }
-                            case 0:
-                            {
-                                break;
-                            }
-                            }
-                        }
-                        else
-                        {
-                            cout << "Nothing entered. Return to home..." << endl << endl;
-                        }
-                        break;
-                    }
-                    case 3:
-                    {
-                        cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
-                        id = GetInt();
-                        while (id != NULL)
-                        {
-                            picked_ids.push_back(id);
-                            cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
-                            id = GetInt();
-                        }
-                        if (!picked_ids.empty())
-                        {
-                            cout << "Are you sure to delete?" << endl
-                                << "1. Yes" << endl
-                                << "2. No" << endl << endl;
-                            
-
-                            a = GetInt(0, 3);
-                            cout << endl;
-
-                            switch (a)
-                            {
-                            case 1:
-                            {
-                                for (int i = 0; i < picked_ids.size(); i++) {
-                                    for (int j = 0; j < Pipes.size(); j++) {
-                                        if (Pipes[j].id == picked_ids[i])
-                                        {
-                                            Pipes.erase(Pipes.begin() + j);
-                                        }
-                                    }
-                                }
-                                picked_ids.clear();
-                                break;
-                            }
-                            case 2:
-                            {
-                                break;
-                            }
-                            }
-                        }
-                    }
-                }
-                // done. check input
-            }
-            else
-            {
-            cout << "No pipelines. Want to add?" << endl 
-                << "1. Yes" << endl
-                << "2. No" << endl << endl;
-
-
-            a = GetInt(0, 3);
-            cout << endl;
-
-            switch (a)
-            {
-            case 1:
-            {
-                pipe = Create_pipe();
-                pipe.id = p_id_count++;
-                Pipes.push_back(pipe);
-                break;
-                break;
-            }
-            case 2:
-            {
-                break;
-            }
-            }
-            }
-            break;
-        }
-        case 2: // show stations. if no stations, then add only
-        {
-            if (!Stations.empty())
-            {
-                // !!! put in function with giving vector
-                table.Clear();
-                table.AddCol(5);
-                table.AddCol(15);
-                table.AddCol(10);
-                table.AddCol(10);
-                table.AddCol(15);
-
-                table.MakeBorderExt(true);
-                table.SetDelimRow(true, '-');
-                table.SetDelimCol(true, '|');
-
-                table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
-
-                for (int i = 0; i < Stations.size(); i++) {
-                    table << Stations[i].id << Stations[i].station_name << Stations[i].shops << Stations[i].working_shops << Stations[i].effect;
-            }
-                cout << "What to do?" << endl
-                    << "1. Add exciting station" << endl
-                    << "2. Modify" << endl
-                    << "3. Delete" << endl
-                    << "0. Back to home" << endl << endl;
-
-                a = GetInt();
+                a = GetInt(0, 3);
                 cout << endl;
 
                 switch (a)
                 {
-                case 1:
+                case 1: // add
                 {
-                    station = Create_station();
-                    station.id = s_id_count++;
-                    Stations.push_back(station);
+                    pipe = Create_pipe();
+                    p_id_count++;
+                    pipe.id = p_id_count;
+                    Pipes.insert({ p_id_count, pipe });
                     break;
                 }
-                case 2:
+                case 2: // modify
                 {
-                    cout << "Enter IDs of stations. One by one, after each ID press ENTER:" << endl; // single id!!!
+
+                    cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
                     id = GetInt();
                     while (id != NULL)
                     {
-                        picked_ids.push_back(id);
-                        cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
+                        vec_picked_ids.push_back(id);
+                        cout << "Added. Enter one more or type 0 to modify" << endl; // check what the output when press ENTER
                         id = GetInt();
                     }
-                    if (!picked_ids.empty())
+                    if (!vec_picked_ids.empty())
                     {
-                        cout << "What repairing status you want to set?" << endl // change number of wsh only
+                        cout << "What repairing status you want to set?" << endl
                             << "1. All in repair" << endl
                             << "2. All in use" << endl
                             << "0. Back to home" << endl << endl;
 
-                        a = GetInt(-1, 3);
+                        a = GetInt(0, 2);
                         cout << endl;
 
                         switch (a)
                         {
                         case 1:
                         {
-                            for (int i = 0; i < picked_ids.size(); i++) {
-                                for (int j = 0; j < Stations.size(); j++) {
-                                    if (Stations[j].id == picked_ids[i])
+                            it_pipe = Pipes.begin();
+
+                            for (int i = 0; i < vec_picked_ids.size(); i++) {
+                                for (int j = 0; it_pipe != Pipes.end(); it_pipe++) {
+                                    if (it_pipe->first == vec_picked_ids[i])
                                     {
-                                        Stations[j].working_shops = 1; // do check on working shops
+                                        Pipes[it_pipe->first].Repair = 1;
                                     }
                                 }
                             }
-                            picked_ids.clear();
+                            vec_picked_ids.clear();
                             break;
                         }
                         case 2:
                         {
-                            for (int i = 0; i < picked_ids.size(); i++) {
-                                for (int j = 0; j < Stations.size(); j++) {
-                                    if (Stations[j].id == picked_ids[i])
+                            it_pipe = Pipes.begin();
+
+                            for (int i = 0; i < vec_picked_ids.size(); i++) {
+                                for (int j = 0; it_pipe != Pipes.end(); it_pipe++) {
+                                    if (it_pipe->first == vec_picked_ids[i])
                                     {
-                                        Stations[j].working_shops = 0;
+                                        Pipes[it_pipe->first].Repair = 0;
                                     }
                                 }
                             }
-                            picked_ids.clear();
+                            vec_picked_ids.clear();
                             break;
                         }
                         case 0:
@@ -653,11 +498,126 @@ int main()
                     id = GetInt();
                     while (id != NULL)
                     {
-                        picked_ids.push_back(id);
-                        cout << "Added. Enter one more or press ENTER to modify" << endl; // check what the output when press ENTER
+                        vec_picked_ids.push_back(id);
+                        cout << "Added. Enter one more or type 0 to modify" << endl; // check what the output when press ENTER
                         id = GetInt();
                     }
-                    if (!picked_ids.empty())
+                    if (!vec_picked_ids.empty())
+                    {
+                        cout << "Are you sure to delete?" << endl
+                            << "1. Yes" << endl
+                            << "2. No" << endl << endl;
+
+                        a = GetInt(1, 2);
+                        cout << endl;
+
+                        switch (a)
+                        {
+                        case 1:
+                        {
+                            it_pipe = Pipes.begin();
+
+                            for (int i = 0; i < vec_picked_ids.size(); i++) {
+                                it_pipe = Pipes.find(vec_picked_ids[i]);
+                                Pipes.erase(it_pipe);
+                            }
+                            vec_picked_ids.clear();
+                            break;
+                        }
+                        case 2:
+                        {
+                            cout << "OK, returning to home..." << endl << endl;
+                            break;
+                        }
+                        }
+                    }
+                    else
+                    {
+                        cout << "Nothing entered. Returning to home..." << endl << endl;
+                    }
+                }
+                }
+            }
+            else
+            {
+                cout << "No pipelines. Want to add?" << endl
+                    << "1. Yes" << endl
+                    << "2. No" << endl << endl;
+
+                a = GetInt(1, 2);
+                cout << endl;
+
+                switch (a)
+                {
+                case 1:
+                {
+                    pipe = Create_pipe();
+                    p_id_count++;
+                    pipe.id = p_id_count;
+                    Pipes.insert({ p_id_count, pipe });
+                    break;
+                }
+                case 2:
+                {
+                    cout << "OK, returning to home..." << endl << endl;
+                    break;
+                }
+                }
+            }
+            break;
+        }
+        case 2: // show stations. if no stations, then add only
+        {
+            if (!Stations.empty())
+            {
+                // !!! put in function with giving vector
+                table.Clear();
+                table.AddCol(5);
+                table.AddCol(15);
+                table.AddCol(10);
+                table.AddCol(20);
+                table.AddCol(20);
+
+                table.MakeBorderExt(true);
+                table.SetDelimRow(true, '-');
+                table.SetDelimCol(true, '|');
+
+                table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
+
+                it_station = Stations.begin();
+
+                for (int i = 0; it_station != Stations.end(); it_station++) {
+                    table << it_station->second.id << it_station->second.station_name << it_station->second.shops << it_station->second.working_shops << it_station->second.effect;
+                }
+                cout << "What to do?" << endl
+                    << "1. Add exciting station" << endl
+                    << "2. Delete" << endl
+                    << "0. Back to home" << endl << endl;
+
+                a = GetInt(0, 2);
+                cout << endl;
+
+                switch (a)
+                {
+                case 1:
+                {
+                    station = Create_station();
+                    s_id_count++;
+                    station.id = s_id_count;
+                    Stations.insert({ s_id_count, station });
+                    break;
+                }
+                case 2:
+                {
+                    cout << "Enter IDs of pipelines. One by one, after each ID press ENTER:" << endl;
+                    id = GetInt();
+                    while (id != NULL)
+                    {
+                        vec_picked_ids.push_back(id);
+                        cout << "Added. Enter one more or type 0 to modify" << endl; // check what the output when press ENTER
+                        id = GetInt();
+                    }
+                    if (!vec_picked_ids.empty())
                     {
                         cout << "Are you sure to delete?" << endl
                             << "1. Yes" << endl
@@ -671,15 +631,15 @@ int main()
                         {
                         case 1:
                         {
-                            for (int i = 0; i < picked_ids.size(); i++) {
-                                for (int j = 0; j < Stations.size(); j++) {
-                                    if (Stations[j].id == picked_ids[i])
-                                    {
-                                        Stations.erase(Stations.begin() + j);
-                                    }
-                                }
+                            it_station = Stations.begin();
+
+                            for (int i = 0; i < vec_picked_ids.size(); i++) {
+                                it_station = Stations.find(vec_picked_ids[i]);
+                                Stations.erase(it_station);
                             }
+                            vec_picked_ids.clear();
                             break;
+
                         }
                         case 2:
                         {
@@ -689,207 +649,444 @@ int main()
                     }
                 }
                 }
-            //what to do?
-            //1. add exciting
-            //2. modify one
-            //3. delete one
             }
             else
             {
-            cout << "No stations. Want to add?" << endl
-                << "1. Yes" << endl
-                << "2. No" << endl << endl;
+                cout << "No stations. Want to add?" << endl
+                    << "1. Yes" << endl
+                    << "2. No" << endl << endl;
 
+                a = GetInt(1, 2);
+                cout << endl;
 
-            a = GetInt(0, 3);
-            cout << endl;
-
-            switch (a)
-            {
-            case 1:
-            {
-                station = Create_station();
-                station.id = s_id_count++;
-                Stations.push_back(station);
-                break;
-            }
-            case 2:
-            {
-                break;
-            }
-            }
+                switch (a)
+                {
+                case 1:
+                {
+                    station = Create_station();
+                    s_id_count++;
+                    station.id = s_id_count;
+                    Stations.insert({ s_id_count, station });
+                    break;
+                }
+                case 2:
+                {
+                    break;
+                }
+                }
             }
             break;
         }
-        case 3: // search pipelines. if no pipelines, then unavailible
-        {
-            // by ID
-            // by Repairing status
-            break;
-        }
-        case 4: // search stations. if no stations, then unavailible
-        {
-            // by Name
-            // by % of working shops
-            break;
-        }
-        case 5: // multiple pipeline editing. if no pipelines, then unavailible
-        {
-            // by entered IDs
-            // by search results 
-            break;
-        }
-        case 6: // multiple station editing. if no stations, then unavailible
-        {
-            // by entered IDs
-            // by search results
-            break;
-        }
-        case 7: // save to file w/custom name
-        {
-            break;
-        }
-        case 8: // load from file w/custom name
-        {
-            break;
-        }
-        case 0:
-        {
-            return 0;
-        }
-        default: // big ass cunt
-        {
-            break;
-        }
-        }
-
-        /*switch (a)
-        {
-        case 1:
-        {
-            pipe = Create_pipe();
-            pipe.id = Pipes.size() + 1;
-            Pipes.push_back(pipe);
-            break;
-        }
-        case 2:
-        {
-            station = Create_station();
-            station.id = Stations.size() + 1;
-            Stations.push_back(station);
-            break;
-        }
-        case 3: // show all in table
+        case 3: // search pipelines.
         {
             if (!Pipes.empty())
             {
-                //PipeOutput(pipe);
+                cout << "Search by..." << endl
+                    << "1. By ID" << endl
+                    << "2. By repairing status" << endl
+                    << "0. Back to home" << endl << endl;
+                a = GetInt(0, 2);
 
-                table.Clear();
-                table.SetCols(4, 12);
+                switch (a)
+                {
+                case 1:
+                {
+                    // by ID
+                    cout << "Enter ID of pipeline: " << endl << endl;
 
-                table.MakeBorderExt(true);
-                table.SetDelimRow(true, '-');
-                table.SetDelimCol(true, '|');
+                    a = GetInt();
 
-                cout << "Pipelines:" << endl << endl;
+                    it_pipe = Pipes.find(a);
 
-                table << "ID" << "Diameter" << "Length" << "Repairing?";
+                    if (it_pipe == Pipes.end())
+                    {
+                        cout << "No pipeline found." << endl << endl;
+                    }
+                    else
+                    {
+                        table.Clear();
+                        table.SetCols(4, 12);
 
-                for (int i = 0; i < Pipes.size(); i++) {
-                    table << Pipes[i].id << Pipes[i].d << Pipes[i].l << Pipes[i].Repair;
+                        table.MakeBorderExt(true);
+                        table.SetDelimRow(true, '-');
+                        table.SetDelimCol(true, '|');
+
+                        cout << "Pipeline:" << endl << endl;
+
+                        table << "ID" << "Diameter" << "Length" << "Repairing?";
+                        table << it_pipe->second.id << it_pipe->second.d << it_pipe->second.l << it_pipe->second.Repair;
+
+                        cout << endl << endl;
+                    }
+                    break;
                 }
+                case 2:
+                {
+                    // by Repairing status
 
-                cout << endl << endl;
+                    cout << "What status?" << endl
+                        << "1. Repairing now" << endl
+                        << "2. In use" << endl << endl;
+
+                    a = GetInt();
+
+                    switch (a)
+                    {
+                    case 1:
+                    {
+                        it_pipe = Pipes.begin();
+                        for (int i = 0; it_pipe != Pipes.end(); it_pipe++) {
+                            if (it_pipe->second.Repair == 1)
+                            {
+                                vec_picked_p.push_back(it_pipe->second);
+                            }
+                        }
+
+                        if (!vec_picked_p.empty())
+                        {
+                            table.Clear();
+                            table.SetCols(4, 12);
+
+                            table.MakeBorderExt(true);
+                            table.SetDelimRow(true, '-');
+                            table.SetDelimCol(true, '|');
+
+                            cout << "Pipelines:" << endl << endl;
+
+                            table << "ID" << "Diameter" << "Length" << "Repairing?";
+
+                            for (int i = 0; i < vec_picked_p.size(); i++) {
+                                table << vec_picked_p[i].id << vec_picked_p[i].d << vec_picked_p[i].l << vec_picked_p[i].Repair;
+                            }
+
+                            vec_picked_p.clear();
+                        }
+                        else
+                        {
+                            cout << "No pipelines found." << endl << endl;
+                        }
+
+
+                        cout << endl << endl;
+                        break;
+                    }
+                    case 2:
+                    {
+                        it_pipe = Pipes.begin();
+                        for (int i = 0; it_pipe != Pipes.end(); it_pipe++) {
+                            if (it_pipe->second.Repair == 1)
+                            {
+                                vec_picked_p.push_back(it_pipe->second);
+                            }
+
+
+                            if (!vec_picked_p.empty())
+                            {
+                                table.Clear();
+                                table.SetCols(4, 12);
+
+                                table.MakeBorderExt(true);
+                                table.SetDelimRow(true, '-');
+                                table.SetDelimCol(true, '|');
+
+                                cout << "Pipelines:" << endl << endl;
+
+                                table << "ID" << "Diameter" << "Length" << "Repairing?";
+
+                                for (int i = 0; i < vec_picked_p.size(); i++) {
+                                    table << vec_picked_p[i].id << vec_picked_p[i].d << vec_picked_p[i].l << vec_picked_p[i].Repair;
+                                }
+
+                                vec_picked_p.clear();
+                            }
+                            else
+                            {
+                                cout << "No pipelines found." << endl << endl;
+                            }
+
+                            cout << endl << endl;
+                            break;
+                        }
+                    }
+                    break;
+                    }
+                }
+                }
             }
             else
             {
-                cout << "No pipelines in base." << endl << endl;
-            };
-
-            if (station.shops > 0)
-            {
-                //StationOutput(station);
-
-                table.Clear();
-                table.AddCol(5);
-                table.AddCol(15);
-                table.AddCol(10);
-                table.AddCol(10);
-                table.AddCol(15);
-
-                table.MakeBorderExt(true);
-                table.SetDelimRow(true, '-');
-                table.SetDelimCol(true, '|');
-
-                table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
-
-                for (int i = 0; i < Stations.size(); i++) {
-                    table << Stations[i].id << Stations[i].station_name << Stations[i].shops << Stations[i].working_shops << Stations[i].effect;
-                }
+                cout << "No pipelines." << endl << endl;
             }
-            else
-            {
-                cout << "No stations in base." << endl << endl;
-            };
             break;
         }
-        case 4: 
-            {
-            int b = 0;
-
-            if (pipe.d > 0)
-            {
-                PrintPipeEdit();
-                b = GetInt();
-                cout << endl;
-            
-                PipeEdit(b, pipe);
-            }
-            else
-            {
-               cout << "No pipeline in base." << endl << endl; 
-            }
-            break;
-            }
-        case 5:
-            {
-            if (station.shops > 0)
-            {
-                PrintStationEdit();
-                int c = GetInt();
-                cout << endl;
-            
-                StationEdit(c, station);
-            }
-            else
-            {
-               cout << "No station in base." << endl << endl; 
-            }
-            break;
-            }
-        case 6:
-           {
-            OutputInFile(pipe, station);
-            break;
-           }
-        case 7:
+        case 4: // search stations. 
         {
-            LoadFromFile(pipe, station);
+            if (!Stations.empty())
+            {
+                cout << "Search by..." << endl
+                    << "1. By name" << endl
+                    << "2. By ID" << endl
+                    << "3. By % of working shops" << endl
+                    << "0. Return to home" << endl << endl;
+
+                a = GetInt(0, 3);
+
+                switch (a)
+                {
+                case 1:
+                {
+                    // by name
+                    cout << "Enter name: ";
+                    str = GetString();
+
+
+                    it_station = Stations.begin();
+                    for (int i = 0; it_station != Stations.end(); it_station++)
+                    {
+                        if (it_station->second.station_name == str)
+                        {
+                            vec_picked_s.push_back(it_station->second);
+                        }
+                    }
+
+                    if (!vec_picked_s.empty())
+                    {
+                        table.Clear();
+                        table.SetCols(4, 12);
+
+                        table.MakeBorderExt(true);
+                        table.SetDelimRow(true, '-');
+                        table.SetDelimCol(true, '|');
+
+                        cout << "Stations:" << endl << endl;
+
+                        table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
+
+                        for (int i = 0; i < vec_picked_s.size(); i++) {
+                            table << vec_picked_s[i].id << vec_picked_s[i].station_name << vec_picked_s[i].shops << vec_picked_s[i].working_shops << vec_picked_s[i].effect;
+                        }
+
+                        vec_picked_s.clear();
+                    }
+                    else
+                    {
+                        cout << "No stations found." << endl << endl;
+                    }
+
+                    break;
+                }
+                case 2:
+                {
+                    // by ID
+                    cout << "Enter ID of station: " << endl << endl;
+
+                    a = GetInt();
+
+                    it_station = Stations.find(a);
+
+                    if (it_station == Stations.end())
+                    {
+                        cout << "No station found." << endl << endl;
+                    }
+                    else
+                    {
+                        table.Clear();
+                        table.SetCols(4, 12);
+
+                        table.MakeBorderExt(true);
+                        table.SetDelimRow(true, '-');
+                        table.SetDelimCol(true, '|');
+
+                        cout << "Station:" << endl << endl;
+
+                        table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
+                        table << it_station->second.id << it_station->second.station_name << it_station->second.shops << it_station->second.working_shops << it_station->second.effect;
+                    }
+                    break;
+                }
+                case 3:
+                {
+                    cout << "Enter percent that is not less than the one you are looking for: ";
+                    a = GetInt(0, 100);
+
+                    it_station = Stations.begin();
+                    for (int i = 0; it_station != Stations.end(); it_station++)
+                    {
+                        if (it_station->second.working_shops / it_station->second.shops >= a)
+                        {
+                            vec_picked_s.push_back(it_station->second);
+                        }
+
+                        if (!vec_picked_s.empty())
+                        {
+                            table.Clear();
+                            table.SetCols(4, 12);
+
+                            table.MakeBorderExt(true);
+                            table.SetDelimRow(true, '-');
+                            table.SetDelimCol(true, '|');
+
+                            cout << "Stations:" << endl << endl;
+
+                            table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
+
+                            for (int i = 0; i < vec_picked_s.size(); i++) {
+                                table << vec_picked_s[i].id << vec_picked_s[i].station_name << vec_picked_s[i].shops << vec_picked_s[i].working_shops << vec_picked_s[i].effect;
+                            }
+
+                            vec_picked_s.clear();
+                        }
+                        else
+                        {
+                            cout << "No stations found." << endl << endl;
+                        }
+                    }
+                }
+                }
+            }
+            else
+            {
+                cout << "No stations" << endl << endl;
+            }
+            break;
+        }
+        case 5: // save to file w/custom name
+        {
+            if (Pipes.empty() && Stations.empty())
+            {
+                cout << "Nothing to save." << endl << endl;
+            }
+            else
+            {
+                ofstream file;
+
+                cout << "Enter name of output file: ";
+                str = GetString();
+                file.open(str, ios_base::out);
+
+                if (file.good())
+                {
+                    file << "PIPELINES COUNT" << endl << p_id_count << endl << "STATIONS COUNT" << endl << s_id_count << endl;
+                    if (p_id_count != 0)
+                    {
+                        it_pipe = Pipes.begin();
+                        for (int i = 0; it_pipe != Pipes.end(); it_pipe++)
+                        {
+                            file << "PIPELINE" << endl
+                                << it_pipe->second.id << endl
+                                << it_pipe->second.l << endl
+                                << it_pipe->second.d << endl
+                                << it_pipe->second.Repair << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "No pipelane in base.";
+                    }
+
+                    if (s_id_count != 0)
+                    {
+                        it_station = Stations.begin();
+                        for (int i = 0; it_station != Stations.end(); it_station++)
+                        {
+                            file << "STATION" << endl
+                                << it_station->second.id << endl
+                                << it_station->second.station_name << endl
+                                << it_station->second.shops << endl
+                                << it_station->second.working_shops << endl
+                                << it_station->second.effect << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "No station in base." << endl << endl;
+                    }
+                    file.close();
+                    cout << "Saved." << endl << endl;
+                }
+                else
+                {
+                    cout << "Can't save the file." << endl << endl;
+                }
+            }
+            break;
+        }
+        case 6: // load from file w/custom name
+        {
+            ifstream file;
+            cout << "Enter name of output file: ";
+            str = GetString();
+            file.open(str, ios::in);
+
+            if (file.good())
+            {
+                Pipes.clear();
+                Stations.clear();
+
+                while (!file.eof())
+                {
+                    getline(file, str);
+                    if (str == "PIPELINE")
+                    {
+                        string value;
+                        Pipe p_picked;
+                        getline(file, value);
+                        p_picked.id = stoi(value);
+                        getline(file, value);
+                        p_picked.l = stof(value);
+                        getline(file, value);
+                        p_picked.d = stoi(value);
+                        getline(file, value);
+                        p_picked.Repair = (value == "1");
+
+                        Pipes.insert({ p_picked.id, p_picked });
+                    }
+
+                    if (str == "STATION")
+                    {
+                        string value;
+                        Station s_picked;
+                        getline(file, value);
+                        s_picked.id = stoi(value);
+                        getline(file, value);
+                        s_picked.station_name = value;
+                        getline(file, value);
+                        s_picked.shops = stoi(value);
+                        getline(file, value);
+                        s_picked.working_shops = stoi(value);
+                        getline(file, value);
+                        s_picked.effect = stoi(value);
+
+                        Stations.insert({ s_picked.id, s_picked });
+                    }
+
+                    if (str == "PIPELINES COUNT")
+                    {
+                        string value;
+                        getline(file, value);
+                        p_id_count = stoi(value);
+                    }
+
+                    if (str == "STATIONS COUNT")
+                    {
+                        string value;
+                        getline(file, value);
+                        s_id_count = stoi(value);
+                    }
+                }
+                cout << "Loaded." << endl << endl;
+            }
+            else
+            {
+                cout << "Can't load from file." << endl << endl;
+            }
+
             break;
         }
         case 0:
         {
             return 0;
-            break;
         }
-        default:
-        {
-            cout << "Incorrect. Try again." << endl << endl;
-            break;
         }
-        }*/
-
-    } 
+    }
 }
-      
