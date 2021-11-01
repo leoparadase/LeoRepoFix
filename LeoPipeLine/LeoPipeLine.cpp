@@ -545,7 +545,7 @@ int main()
                     << "2. No" << endl << endl;
 
                 a = GetInt(1, 2);
-                cout << endl;
+                cout << endl << endl;
 
                 switch (a)
                 {
@@ -589,7 +589,7 @@ int main()
                 for (int i = 0; it_station != Stations.end(); it_station++) {
                     table << it_station->second.id << it_station->second.station_name << it_station->second.shops << it_station->second.working_shops << it_station->second.effect;
                 }
-                cout << "What to do?" << endl
+                cout << endl << "What to do?" << endl
                     << "1. Add exciting station" << endl
                     << "2. Delete" << endl
                     << "0. Back to home" << endl << endl;
@@ -657,7 +657,7 @@ int main()
                     << "2. No" << endl << endl;
 
                 a = GetInt(1, 2);
-                cout << endl;
+                cout << endl << endl;
 
                 switch (a)
                 {
@@ -686,16 +686,16 @@ int main()
                     << "2. By repairing status" << endl
                     << "0. Back to home" << endl << endl;
                 a = GetInt(0, 2);
+                cout << endl << endl;
 
                 switch (a)
                 {
                 case 1:
                 {
                     // by ID
-                    cout << "Enter ID of pipeline: " << endl << endl;
-
+                    cout << "Enter ID of pipeline: ";
                     a = GetInt();
-
+                    cout << endl << endl;
                     it_pipe = Pipes.find(a);
 
                     if (it_pipe == Pipes.end())
@@ -729,6 +729,7 @@ int main()
                         << "2. In use" << endl << endl;
 
                     a = GetInt();
+                    cout << endl << endl;
 
                     switch (a)
                     {
@@ -760,6 +761,7 @@ int main()
                             }
 
                             vec_picked_p.clear();
+                            cout << endl << endl;
                         }
                         else
                         {
@@ -774,7 +776,7 @@ int main()
                     {
                         it_pipe = Pipes.begin();
                         for (int i = 0; it_pipe != Pipes.end(); it_pipe++) {
-                            if (it_pipe->second.Repair == 1)
+                            if (it_pipe->second.Repair == 0)
                             {
                                 vec_picked_p.push_back(it_pipe->second);
                             }
@@ -798,6 +800,7 @@ int main()
                                 }
 
                                 vec_picked_p.clear();
+                                cout << endl << endl;
                             }
                             else
                             {
@@ -838,7 +841,7 @@ int main()
                     // by name
                     cout << "Enter name: ";
                     str = GetString();
-
+                    cout << endl << endl;
 
                     it_station = Stations.begin();
                     for (int i = 0; it_station != Stations.end(); it_station++)
@@ -852,7 +855,11 @@ int main()
                     if (!vec_picked_s.empty())
                     {
                         table.Clear();
-                        table.SetCols(4, 12);
+                        table.AddCol(5);
+                        table.AddCol(15);
+                        table.AddCol(10);
+                        table.AddCol(20);
+                        table.AddCol(20);
 
                         table.MakeBorderExt(true);
                         table.SetDelimRow(true, '-');
@@ -867,6 +874,7 @@ int main()
                         }
 
                         vec_picked_s.clear();
+                        cout << endl << endl;
                     }
                     else
                     {
@@ -878,9 +886,9 @@ int main()
                 case 2:
                 {
                     // by ID
-                    cout << "Enter ID of station: " << endl << endl;
-
+                    cout << "Enter ID of station: ";
                     a = GetInt();
+                    cout << endl << endl;
 
                     it_station = Stations.find(a);
 
@@ -891,7 +899,11 @@ int main()
                     else
                     {
                         table.Clear();
-                        table.SetCols(4, 12);
+                        table.AddCol(5);
+                        table.AddCol(15);
+                        table.AddCol(10);
+                        table.AddCol(20);
+                        table.AddCol(20);
 
                         table.MakeBorderExt(true);
                         table.SetDelimRow(true, '-');
@@ -901,18 +913,21 @@ int main()
 
                         table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
                         table << it_station->second.id << it_station->second.station_name << it_station->second.shops << it_station->second.working_shops << it_station->second.effect;
+                        cout << endl << endl;
                     }
                     break;
                 }
                 case 3:
                 {
                     cout << "Enter percent that is not less than the one you are looking for: ";
-                    a = GetInt(0, 100);
+                    float b = GetFloat(0.0, 100.0);
+                    cout << endl << endl;
 
                     it_station = Stations.begin();
                     for (int i = 0; it_station != Stations.end(); it_station++)
                     {
-                        if (it_station->second.working_shops / it_station->second.shops >= a)
+                        float shop_check = (float)it_station->second.working_shops / (float)it_station->second.shops * 100;
+                        if (shop_check >= b)
                         {
                             vec_picked_s.push_back(it_station->second);
                         }
@@ -920,7 +935,11 @@ int main()
                         if (!vec_picked_s.empty())
                         {
                             table.Clear();
-                            table.SetCols(4, 12);
+                            table.AddCol(5);
+                            table.AddCol(15);
+                            table.AddCol(10);
+                            table.AddCol(20);
+                            table.AddCol(20);
 
                             table.MakeBorderExt(true);
                             table.SetDelimRow(true, '-');
@@ -935,6 +954,7 @@ int main()
                             }
 
                             vec_picked_s.clear();
+                            cout << endl << endl;
                         }
                         else
                         {
@@ -950,7 +970,7 @@ int main()
             }
             break;
         }
-        case 5: // save to file w/custom name
+        case 5:
         {
             if (Pipes.empty() && Stations.empty())
             {
@@ -962,6 +982,7 @@ int main()
 
                 cout << "Enter name of output file: ";
                 str = GetString();
+                cout << endl << endl;
                 file.open(str, ios_base::out);
 
                 if (file.good())
@@ -1011,11 +1032,12 @@ int main()
             }
             break;
         }
-        case 6: // load from file w/custom name
+        case 6:
         {
             ifstream file;
-            cout << "Enter name of output file: ";
+            cout << "Enter name of file: ";
             str = GetString();
+            cout << endl << endl;
             file.open(str, ios::in);
 
             if (file.good())
