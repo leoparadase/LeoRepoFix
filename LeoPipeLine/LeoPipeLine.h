@@ -1,37 +1,37 @@
-struct Pipe;
-struct Station;
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include "LeoPipeLine.h"
+#include "StreamTable.h" // исключить!
+#include "Ccheck.h"
+#include "Cpipe.h"
+#include "Cstation.h"
 
-/*void PrintMenu();
+void PrintMenu();
 
-void PipesMapTable(StreamTable& table, std::unordered_map<int, Pipe>::iterator& it_pipe, std::unordered_map<int, Pipe>& Pipes);
+void TablePipes(StreamTable& table, std::unordered_map<int, Cpipe>::iterator& it_pipe, std::unordered_map<int, Cpipe>& Pipes, std::vector<int>& vec_picked_ids);
 
-void PrintPipesMenu();
+void AfterTableMenu();
 
-void AddPipe(Pipe& pipe, int& p_id_count, std::unordered_map<int, Pipe>& Pipes);
+void WhatStatusToSet();
 
-void ModifyPipe(int& id, std::vector<int>& vec_picked_ids, int& a, std::unordered_map<int, Pipe>::iterator& it_pipe, std::unordered_map<int, Pipe>& Pipes);
+void PipeTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes, std::vector<int>& vec_picked_ids);
 
-void DeletePipe(int& id, std::vector<int>& vec_picked_ids, int& a, std::unordered_map<int, Pipe>::iterator& it_pipe, std::unordered_map<int, Pipe>& Pipes);
+void StationTable(StreamTable& table, std::unordered_map<int, Cstation>& Stations, std::vector<int>& vec_picked_ids);
 
-void StationMapTable(StreamTable& table, std::unordered_map<int, Station>::iterator& it_station, std::unordered_map<int, Station>& Stations);
+void Save(std::unordered_map<int, Cpipe>& Pipes, std::unordered_map<int, Cstation>& Stations, std::string& str);
 
-void PrintStationsMenu();
+void PrintEditMenu();
 
-void AddStation(Station& station, int& s_id_count, std::unordered_map<int, Station>& Stations);
+void PrintMultiEditMenu();
 
-void DeleteStation(int& id, std::vector<int>& vec_picked_ids, int& a, std::unordered_map<int, Station>::iterator& it_station, std::unordered_map<int, Station>& Stations);
+void PrintSearchMenu();
 
-void PrintPipeSearch();
+void Save();
 
-void PipeSearch(std::unordered_map<int, Pipe>& Pipes, int& a, std::unordered_map<int, Pipe>::iterator& it_pipe, StreamTable& table, std::vector<Pipe>& vec_picked_p);
+void Load();
 
-void StationSearch(std::unordered_map<int, Station>& Stations, int& a, std::string& str, std::unordered_map<int, Station>::iterator& it_station, std::vector<Station>& vec_picked_s, StreamTable& table);
-
-void Saving(std::unordered_map<int, Pipe>& Pipes, std::unordered_map<int, Station>& Stations, std::string& str, int p_id_count, int s_id_count, std::unordered_map<int, Pipe>::iterator& it_pipe, std::unordered_map<int, Station>::iterator& it_station);
-
-void Loading(std::string& str, std::unordered_map<int, Pipe>& Pipes, std::unordered_map<int, Station>& Stations, int& p_id_count, int& s_id_count);
-
-void ShowPipes(std::unordered_map<int, Pipe>& Pipes, StreamTable& table, std::unordered_map<int, Pipe>::iterator& it_pipe, int& a, Pipe& pipe, int& p_id_count, int& id, std::vector<int>& vec_picked_ids);
-
-void ShowStations(std::unordered_map<int, Station>& Stations, StreamTable& table, std::unordered_map<int, Station>::iterator& it_station, int& a, Station& station, int& s_id_count, int& id, std::vector<int>& vec_picked_ids);
-*/
