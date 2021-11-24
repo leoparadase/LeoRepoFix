@@ -8,21 +8,7 @@ int Cpipe::max_id = 0;
 
 Cpipe::Cpipe()
 {
-    SetMaxID();
-    SetID();
-
-    cout << "Ready to read pipeline properties." << endl;
-
-    cout << "Diameter: ";
-    this -> d = getInt(500, 3000);
-
-    cout << "Length: ";
-    this -> l = getFloat();
-
-    cout << "Is repairing? ";
-    this -> s = getBool();
-
-    cout << endl << "Pipeline added." << endl << endl;
+   
 }
 
 Cpipe::~Cpipe()
@@ -37,6 +23,25 @@ bool Cpipe::checkCondition(const Cpipe& Cpipe, bool condition)
 bool Cpipe::checkDiameter(const Cpipe& Cpipe, int diameter)
 {
     return diameter == Cpipe.d;
+}
+
+void Cpipe::create()
+{
+    SetMaxID();
+    SetID();
+
+    cout << "Ready to read pipeline properties." << endl;
+
+    cout << "Diameter: ";
+    this->d = getInt(500, 3000);
+
+    cout << "Length: ";
+    this->l = getFloat();
+
+    cout << "Is repairing? ";
+    this->s = getBool();
+
+    cout << endl << "Pipeline added." << endl << endl;
 }
 
 void Cpipe::edit()

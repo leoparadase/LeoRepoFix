@@ -25,6 +25,7 @@ public:
     static bool checkName(const Cstation& Cstation, std::string name);
     static bool checkPercent(const Cstation& Cstation, int percent);
 
+    void create();
     void edit();
 
     void SetID();

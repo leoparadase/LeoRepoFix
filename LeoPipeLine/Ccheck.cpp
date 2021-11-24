@@ -68,17 +68,19 @@ string getFileName()
     string fileName;
     string incorrectSymbols[16] = { " ","~","#","%","&","*","{","}","/",":","<",">","?","+","|","." };
     while (true) {
-        cout << "Enter filename:" << endl;
-        getline(cin, fileName);
-        cerr << fileName;
-        for (string i : incorrectSymbols) {
-            while (fileName.find(i) != string::npos) {
-                fileName.erase(fileName.find(i), 1);
+            cout << "Enter filename: ";
+            cin >> fileName;
+            // getline(cin, fileName);
+            cout << endl << endl;
+            cerr << fileName;
+            for (string i : incorrectSymbols) {
+                while (fileName.find(i) != string::npos) {
+                    fileName.erase(fileName.find(i), 1);
+                }
             }
-        }
-        if (fileName == "") continue;
-        cout << endl;
-        return fileName;
+            if (fileName == "") continue;
+            cout << endl;
+            return fileName;
     }
 }
 

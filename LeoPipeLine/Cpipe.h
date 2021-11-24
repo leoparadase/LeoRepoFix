@@ -24,6 +24,7 @@ public:
     static bool checkCondition(const Cpipe& Cpipe, bool condition);
     static bool checkDiameter(const Cpipe& Cpipe, int diameter);
 
+    void create();
     void edit();
 
     void SetID();

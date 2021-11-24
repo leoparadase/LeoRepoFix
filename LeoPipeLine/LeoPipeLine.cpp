@@ -146,6 +146,7 @@ int main()
                 case 1: // add
                 {
                     Cpipe pipe;
+                    pipe.create();
                     Pipes.insert({ pipe.GetID(), pipe });
                     break;
                 }
@@ -155,32 +156,41 @@ int main()
 
                     while (1) 
                     {
-                        cout << "Enter ID of pipeline (press 0 to exit):" << endl;
+                        cout << "Enter ID of pipeline (press 0 to exit): ";
                         id = getInt();
-                        if (id == 0) { break; };
+                        cout << endl << endl;
+                        if (id == 0) break;
                         if (Pipes.find(id) != Pipes.end()) {
                             Pipes[id].edit();
                         }
                         cout << "Modify one more?" <<
                             endl << "1. Yes" <<
-                            endl << "2. No";
+                            endl << "2. No" << endl << endl;
                         a = getInt(1,2);
-                        if (a == 2) { break; };
+                        cout << endl << endl;
+                        if (a == 2) break;
                     }
+                    break;
                 }
                 case 3:
                 {
-                   cout << "Enter ID of pipeline (press 0 to exit):" << endl;
+                    while (1)
+                    {
+                        cout << "Enter ID of pipeline (press 0 to exit): ";
                         id = getInt();
-                        if (id == 0) { break; };
+                        cout << endl << endl;
+                        if (id == 0) break;
                         if (Pipes.find(id) != Pipes.end()) {
                             Pipes.erase(id);
                         }
                         cout << "Delete one more?" <<
                             endl << "1. Yes" <<
-                            endl << "2. No";
-                        a = getInt(1,2);
-                        if (a == 2) { break; };
+                            endl << "2. No" << endl << endl;
+                        a = getInt(1, 2);
+                        cout << endl << endl;
+                        if (a == 2) break;
+                    }
+                    break;
                 }
                 }
             }
@@ -198,6 +208,7 @@ int main()
                 case 1:
                 {
                     Cpipe pipe;
+                    pipe.create();
                     Pipes.insert({ pipe.GetID(), pipe });
                     break;
                 }
@@ -235,36 +246,50 @@ int main()
                 case 1:
                 {
                     Cstation station;
+                    station.create();
                     Stations.insert({ station.GetID(), station });
                     break;
                 }
                 case 2:
                 {
-                    cout << "Enter ID of station (press 0 to exit):" << endl;
-                    id = getInt();
-                    if (id == 0) { break; };
-                    if (Stations.find(id) != Stations.end()) {
-                        Stations[id].edit();
+                    while (1)
+                    {
+
+                        cout << "Enter ID of station (press 0 to exit): ";
+                        id = getInt();
+                        cout << endl << endl;
+                        if (id == 0) break;
+                        if (Stations.find(id) != Stations.end()) {
+                            Stations[id].edit();
+                        }
+                        cout << "Modify one more?" <<
+                            endl << "1. Yes" <<
+                            endl << "2. No" << endl << endl;
+                        a = getInt(1, 2);
+                        cout << endl << endl;
+                        if (a == 2) break;
                     }
-                    cout << "Modify one more?" <<
-                        endl << "1. Yes" <<
-                        endl << "2. No";
-                    a = getInt(1, 2);
-                    if (a == 2) { break; };
+                    break;
                 }
                 case 3:
                 {
-                    cout << "Enter ID of station (press 0 to exit):" << endl;
-                    id = getInt();
-                    if (id == 0) { break; };
-                    if (Stations.find(id) != Stations.end()) {
-                        Stations.erase(id);
+                    while (1)
+                    {
+                        cout << "Enter ID of station (press 0 to exit): ";
+                        id = getInt();
+                        cout << endl << endl;
+                        if (id == 0) break;
+                        if (Stations.find(id) != Stations.end()) {
+                            Stations.erase(id);
+                        }
+                        cout << "Delete one more?" <<
+                            endl << "1. Yes" <<
+                            endl << "2. No" << endl << endl;
+                        a = getInt(1, 2);
+                        cout << endl << endl;
+                        if (a == 2) break;
                     }
-                    cout << "Delete one more?" <<
-                        endl << "1. Yes" <<
-                        endl << "2. No";
-                    a = getInt(1, 2);
-                    if (a == 2) { break; };
+                    break;
                 }
                 }
             }
@@ -282,6 +307,7 @@ int main()
                 case 1:
                 {
                     Cstation station;
+                    station.create();
                     Stations.insert({ station.GetID(), station });
                     break;
                 }
@@ -313,11 +339,12 @@ int main()
                     PipeTable(table, Pipes, vec_picked_ids);
                     cout << "Want to change status?" << endl
                         << "1. Yes" << endl
-                        << "2. No" << endl;
+                        << "2. No" << endl << endl;
                     a = getInt(1, 2);
-                    if (a == 2) { break; };
+                    cout << endl << endl;
+                    if (a == 2) break;
 
-                    for (auto& i : vec_picked_ids) {
+                    for (int i = 0; i < vec_picked_ids.size(); i++) {
                         if (Pipes.find(vec_picked_ids[i]) != Pipes.end()) {
                             Pipes[vec_picked_ids[i]].edit();
                         }
@@ -361,11 +388,12 @@ int main()
                         StationTable(table, Stations, vec_picked_ids);
                         cout << "Want to modify?" << endl
                             << "1. Yes" << endl
-                            << "2. No" << endl;
+                            << "2. No" << endl << endl;
                         a = getInt(1, 2);
-                        if (a == 2) { break; };
+                        cout << endl << endl;
+                        if (a == 2) break;
 
-                        for (auto& i : vec_picked_ids) {
+                        for (int i = 0; i < vec_picked_ids.size(); i++) {
                             if (Stations.find(vec_picked_ids[i]) != Stations.end()) {
                                 Stations[vec_picked_ids[i]].edit();
                             }
@@ -377,12 +405,13 @@ int main()
 
                 case 2:
                 {
-                    cout << "Enter percent that is not less than the one you are looking for: ";
+                    cout << "Sorry, don't working." << endl << endl;
+                    /*cout << "Enter percent that is not less than the one you are looking for: ";
                     float b = getFloat(0.0, 100.0);
                     cout << endl << endl;
 
                     vec_picked_ids.clear();
-                    //vec_picked_ids = findByFilter(Stations, Cstation::checkPercent, getFloat(0.0, 100.0));
+                    vec_picked_ids = findByFilter(Stations, Cstation::checkPercent, getFloat(0.0, 100.0));
 
                     if (vec_picked_ids.empty())
                     {
@@ -397,14 +426,16 @@ int main()
                         a = getInt(1, 2);
                         if (a == 2) { break; };
 
-                        for (auto& i : vec_picked_ids) {
+                        for (int i = 0; i < vec_picked_ids.size(); i++) {
                             if (Stations.find(vec_picked_ids[i]) != Stations.end()) {
                                 Stations[vec_picked_ids[i]].edit();
                             }
                         }
-                    }
+                    }*/
                     break;
                 }
+                }
+            } break;  }
                 case 5:
                 {
                     if (Pipes.empty() && Stations.empty())
@@ -435,7 +466,6 @@ int main()
                 case 6:
                 {
                     ifstream file;
-                    cout << "Enter name of file: ";
                     str = getFileName();
                     cout << endl << endl;
                     file.open(str, ios::in);
@@ -449,13 +479,13 @@ int main()
                         {
                             getline(file, str);
                             if (str == "PIPELINE") {
-                                Cpipe p;
+                                Cpipe p = {};
                                 file >> p;
                                 Pipes.insert({ p.GetID(), p });
                             }
 
                             if (str == "STATION") {
-                                Cstation s;
+                                Cstation s = {};
                                 file >> s;
                                 Stations.insert({ s.GetID(), s });
                             }
@@ -475,9 +505,6 @@ int main()
                 }
                 }
             }
-        }
-
-        }
-        }
+        
     }
 }

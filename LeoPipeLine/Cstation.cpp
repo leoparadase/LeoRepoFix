@@ -8,24 +8,7 @@ int Cstation::max_id = 0;
 
 Cstation::Cstation()
 {
-    SetMaxID();
-    SetID();
     
-    cout << endl << "Ready to read station properties." << endl;
-
-    cout << "Name: ";
-    this -> n = getString();
-
-    cout << "Shops: ";
-    this -> s = getInt();
-
-    cout << "Working shops: ";
-    this -> w_s = getInt(0, this -> s);
-
-    cout << "Effectiveness: ";
-    this -> e = getInt(0, 100);
-
-    cout << endl << "Station added." << endl << endl;
 }
 
 Cstation::~Cstation()
@@ -40,6 +23,28 @@ bool Cstation::checkName(const Cstation& Cstation, std::string name)
 bool Cstation::checkPercent(const Cstation& Cstation, int percent)
 {
     return round(((float)(Cstation.s - Cstation.w_s) / Cstation.s) * 100) >= percent;
+}
+
+void Cstation::create()
+{
+    SetMaxID();
+    SetID();
+
+    cout << endl << "Ready to read station properties." << endl;
+
+    cout << "Name: ";
+    this->n = getString();
+
+    cout << "Shops: ";
+    this->s = getInt();
+
+    cout << "Working shops: ";
+    this->w_s = getInt(0, this->s);
+
+    cout << "Effectiveness: ";
+    this->e = getInt(0, 100);
+
+    cout << endl << "Station added." << endl << endl;
 }
 
 void Cstation::edit()
