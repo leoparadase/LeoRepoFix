@@ -23,7 +23,7 @@ public:
     friend istream& operator >> (istream& out, Cstation& Cstation);
 
     static bool checkName(const Cstation& Cstation, std::string name);
-    static bool checkPercent(const Cstation& Cstation, int percent);
+    static bool checkPercent(const Cstation& Cstation, float percent);
 
     void create();
     void edit();

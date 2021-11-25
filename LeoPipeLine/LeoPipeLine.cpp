@@ -405,13 +405,11 @@ int main()
 
                 case 2:
                 {
-                    cout << "Sorry, don't working." << endl << endl;
-                    /*cout << "Enter percent that is not less than the one you are looking for: ";
-                    float b = getFloat(0.0, 100.0);
+                    cout << "Enter percent that is not less than the one you are looking for: ";
                     cout << endl << endl;
 
                     vec_picked_ids.clear();
-                    vec_picked_ids = findByFilter(Stations, Cstation::checkPercent, getFloat(0.0, 100.0));
+                    vec_picked_ids = findByFilter(Stations, Cstation::checkPercent, getFloat(0, 100));
 
                     if (vec_picked_ids.empty())
                     {
@@ -424,14 +422,15 @@ int main()
                             << "1. Yes" << endl
                             << "2. No" << endl;
                         a = getInt(1, 2);
-                        if (a == 2) { break; };
+                        if (a == 2) break;
+                        cout << endl << endl;
 
                         for (int i = 0; i < vec_picked_ids.size(); i++) {
                             if (Stations.find(vec_picked_ids[i]) != Stations.end()) {
                                 Stations[vec_picked_ids[i]].edit();
                             }
                         }
-                    }*/
+                    }
                     break;
                 }
                 }

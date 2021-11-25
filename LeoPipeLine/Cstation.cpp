@@ -20,7 +20,7 @@ bool Cstation::checkName(const Cstation& Cstation, std::string name)
     return Cstation.n.find(name) != string::npos;
 }
 
-bool Cstation::checkPercent(const Cstation& Cstation, int percent)
+bool Cstation::checkPercent(const Cstation& Cstation, float percent)
 {
     return round(((float)(Cstation.s - Cstation.w_s) / Cstation.s) * 100) >= percent;
 }
