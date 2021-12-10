@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
-
-using namespace std;
+#include "StreamTable.h"
 
 class Cpipe
 {
@@ -15,11 +15,11 @@ public:
     float l;
     bool s;
 
-    Cpipe();
-    ~Cpipe();
-
+    friend StreamTable& operator << (StreamTable& out, const Cpipe& Cpipe);
     friend std::ostream& operator << (std::ostream& out, const Cpipe& Cpipe);
     friend std::istream& operator >> (std::istream& out, Cpipe& Cpipe);
+    friend std::ofstream& operator << (std::ofstream& out, const Cpipe& Cpipe);
+    friend std::ifstream& operator >> (std::ifstream& out, Cpipe& Cpipe);
 
     static bool checkCondition(const Cpipe& Cpipe, bool condition);
     static bool checkDiameter(const Cpipe& Cpipe, int diameter);
@@ -27,10 +27,6 @@ public:
     void create();
     void edit();
 
-    void SetID();
     int GetID();
-    void UpdateID(int num);
-    void SetMaxID();
     int GetMaxID();
-    void UpdateMaxID(int num);
 };

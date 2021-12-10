@@ -2,19 +2,8 @@
 #include "Cpipe.h"
 #include "Ccheck.h"
 
-using namespace std;
-
 int Cpipe::max_id = 0;
-
-Cpipe::Cpipe()
-{
-   
-}
-
-Cpipe::~Cpipe()
-{
-}
-
+ 
 bool Cpipe::checkCondition(const Cpipe& Cpipe, bool condition)
 {
     return Cpipe.s == condition;
@@ -27,38 +16,14 @@ bool Cpipe::checkDiameter(const Cpipe& Cpipe, int diameter)
 
 void Cpipe::create()
 {
-    SetMaxID();
-    SetID();
-
-    cout << "Ready to read pipeline properties." << endl;
-
-    cout << "Diameter: ";
-    this->d = getInt(500, 3000);
-
-    cout << "Length: ";
-    this->l = getFloat();
-
-    cout << "Is repairing? ";
-    this->s = getBool();
-
-    cout << endl << "Pipeline added." << endl << endl;
+    
 }
 
 void Cpipe::edit()
 {
-    cout << "Enter status for pipe " << GetID() << ": 0 - in use, 1 - repairing" << endl;
+    std::cout << "Enter status for pipe " << GetID() << ": 0 - in use, 1 - repairing" << std::endl;
     this -> s = getBool();
-    cout << "Changed." << endl << endl;
-}
-
-void Cpipe::SetID()
-{
-    this -> id = GetMaxID();
-}
-
-void Cpipe::SetMaxID()
-{
-    max_id++;
+    std::cout << "Changed." << std::endl << std::endl;
 }
 
 int Cpipe::GetMaxID()
@@ -66,34 +31,66 @@ int Cpipe::GetMaxID()
     return max_id;
 }
 
-void Cpipe::UpdateMaxID(int num)
-{
-    this->max_id = num;
-}
-
 int Cpipe::GetID()
 {
     return id;
 }
 
-void Cpipe::UpdateID(int num)
+StreamTable& operator << (StreamTable& out, const Cpipe& Cpipe)
 {
-    this->id = num;
-}
+    out 
+        << Cpipe.id
+        << Cpipe.l
+        << Cpipe.d
+        << Cpipe.s;
+    return out;
 
+}
 std::ostream& operator<<(std::ostream& out, const Cpipe& Cpipe)
 {
-    out << Cpipe.max_id << endl
-        << Cpipe.id << endl
-        << Cpipe.l << endl
-        << Cpipe.d << endl
-        << Cpipe.s << endl;
+    out << Cpipe.max_id << std::endl
+        << Cpipe.id << std::endl
+        << Cpipe.l << std::endl
+        << Cpipe.d << std::endl
+        << Cpipe.s << std::endl;
     return out;
 }
 
 std::istream& operator>>(std::istream& out, Cpipe& Cpipe)
 {
-    string value;
+    Cpipe.max_id++;
+    Cpipe.id = Cpipe.max_id;
+
+    std::cout << "Ready to read pipeline properties." << std::endl;
+
+    std::cout << "Diameter: ";
+    Cpipe.d = getInt(500, 3000);
+
+    std::cout << "Length: ";
+    Cpipe.l = getFloat();
+
+    std::cout << "Is repairing? ";
+    Cpipe.s = getBool();
+
+    std::cout << std::endl << "Pipeline added." << std::endl << std::endl;
+
+    return out;
+}
+
+
+std::ofstream& operator<<(std::ofstream& out, const Cpipe& Cpipe)
+{
+    out << Cpipe.max_id << std::endl
+        << Cpipe.id << std::endl
+        << Cpipe.l << std::endl
+        << Cpipe.d << std::endl
+        << Cpipe.s << std::endl;
+    return out;
+}
+
+std::ifstream& operator>>(std::ifstream& out, Cpipe& Cpipe)
+{
+    std::string value;
     getline(out, value);
     Cpipe.max_id = stoi(value);
     getline(out, value);

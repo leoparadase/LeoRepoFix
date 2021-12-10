@@ -2,22 +2,11 @@
 #include "Cstation.h"
 #include "Ccheck.h"
 
-using namespace std;
-
 int Cstation::max_id = 0;
-
-Cstation::Cstation()
-{
-    
-}
-
-Cstation::~Cstation()
-{
-}
 
 bool Cstation::checkName(const Cstation& Cstation, std::string name)
 {
-    return Cstation.n.find(name) != string::npos;
+    return Cstation.n.find(name) != std::string::npos;
 }
 
 bool Cstation::checkPercent(const Cstation& Cstation, float percent)
@@ -27,42 +16,20 @@ bool Cstation::checkPercent(const Cstation& Cstation, float percent)
 
 void Cstation::create()
 {
-    SetMaxID();
-    SetID();
-
-    cout << endl << "Ready to read station properties." << endl;
-
-    cout << "Name: ";
-    this->n = getString();
-
-    cout << "Shops: ";
-    this->s = getInt();
-
-    cout << "Working shops: ";
-    this->w_s = getInt(0, this->s);
-
-    cout << "Effectiveness: ";
-    this->e = getInt(0, 100);
-
-    cout << endl << "Station added." << endl << endl;
+   
 }
 
 void Cstation::edit()
 {
-    cout << "Edit station No. " << GetID() << " (" << this->n << ") " << endl;
+    std::cout << "Edit station No. " << GetID() << " (" << this->n << ") " << std::endl;
     do {
-        cout << "Enter number of working shops: ";
+        std::cout << "Enter number of working shops: ";
         this -> w_s = getInt();
     } while (this -> w_s > this -> s);
 
-    cout << "Enter efficienty: ";
+    std::cout << "Enter efficienty: ";
     this -> e = getInt();
-    cout << "Changed." << endl;
-}
-
-void Cstation::SetID()
-{
-    this -> id = GetMaxID();
+    std::cout << "Changed." << std::endl;
 }
 
 int Cstation::GetID()
@@ -70,30 +37,71 @@ int Cstation::GetID()
     return id;
 }
 
-void Cstation::SetMaxID()
-{
-    max_id++;
-}
-
 int Cstation::GetMaxID()
 {
     return max_id;
 }
 
-ostream& operator<<(ostream& out, const Cstation& Cstation)
+StreamTable& operator << (StreamTable& out, const Cstation& Cstation)
 {
-    out << Cstation.max_id << endl
-        << Cstation.id << endl
-        << Cstation.n << endl
-        << Cstation.s << endl
-        << Cstation.w_s << endl
-        << Cstation.e << endl;
+    out 
+        << Cstation.id
+        << Cstation.n
+        << Cstation.s
+        << Cstation.w_s
+        << Cstation.e;
     return out;
 }
 
-istream& operator>>(istream& out, Cstation& Cstation)
+std::ostream& operator<<(std::ostream& out, const Cstation& Cstation)
 {
-    string value;
+    out << Cstation.max_id << std::endl
+        << Cstation.id << std::endl
+        << Cstation.n << std::endl
+        << Cstation.s << std::endl
+        << Cstation.w_s << std::endl
+        << Cstation.e << std::endl;
+    return out;
+}
+
+std::istream& operator>>(std::istream& out, Cstation& Cstation)
+{
+    Cstation.max_id++;
+    Cstation.id = Cstation.max_id;
+
+    std::cout << std::endl << "Ready to read station properties." << std::endl;
+
+    std::cout << "Name: ";
+    Cstation.n = getString();
+
+    std::cout << "Shops: ";
+    Cstation.s = getInt();
+
+    std::cout << "Working shops: ";
+    Cstation.w_s = getInt(0, Cstation.s);
+
+    std::cout << "Effectiveness: ";
+    Cstation.e = getInt(0, 100);
+
+    std::cout << std::endl << "Station added." << std::endl << std::endl;
+
+    return out;
+}
+
+std::ofstream& operator<<(std::ofstream& out, const Cstation& Cstation)
+{
+    out << Cstation.max_id << std::endl
+        << Cstation.id << std::endl
+        << Cstation.n << std::endl
+        << Cstation.s << std::endl
+        << Cstation.w_s << std::endl
+        << Cstation.e << std::endl;
+    return out;
+}
+
+std::ifstream& operator>>(std::ifstream& out, Cstation& Cstation)
+{
+    std::string value;
     getline(out, value);
     Cstation.max_id = stoi(value);
     getline(out, value);

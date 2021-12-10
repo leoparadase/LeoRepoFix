@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
 #include <string>
-
-using namespace std;
+#include "StreamTable.h"
 
 class Cstation
 {
@@ -11,16 +11,16 @@ private:
     int id;
     static int max_id;
 public:
-    string n;
+    std::string n;
     int s;
     int w_s;
     int e;
 
-    Cstation();
-    ~Cstation();
-
-    friend ostream& operator << (ostream& out, const Cstation& Cstation);
-    friend istream& operator >> (istream& out, Cstation& Cstation);
+    friend StreamTable& operator << (StreamTable& out, const Cstation& Cstation);
+    friend std::ostream& operator << (std::ostream& out, const Cstation& Cstation);
+    friend std::istream& operator >> (std::istream& out, Cstation& Cstation);
+    friend std::ofstream& operator << (std::ofstream& out, const Cstation& Cstation);
+    friend std::ifstream& operator >> (std::ifstream& out, Cstation& Cstation);
 
     static bool checkName(const Cstation& Cstation, std::string name);
     static bool checkPercent(const Cstation& Cstation, float percent);
@@ -28,9 +28,7 @@ public:
     void create();
     void edit();
 
-    void SetID();
     int GetID();
-    void SetMaxID();
     int GetMaxID();
 };
 

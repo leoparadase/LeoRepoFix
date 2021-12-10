@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include "LeoPipeLine.h"
-#include "StreamTable.h" // исключить!
+#include "StreamTable.h"
 #include "Ccheck.h"
 #include "Cpipe.h"
 #include "Cstation.h"
@@ -71,7 +71,7 @@ void PipeTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes, std::v
     for (auto it = Pipes.begin(); it != Pipes.end(); ++it) {
         for (int i = 0; i < vec_picked_ids.size(); i++) {
             if (vec_picked_ids[i] == it->first) {
-                table << it->second.GetID() << it->second.d << it->second.l << it->second.s;
+                table << it->second;
             }
         }
     }
@@ -95,7 +95,7 @@ void StationTable(StreamTable& table, std::unordered_map<int, Cstation>& Station
     for (auto it = Stations.begin(); it != Stations.end(); ++it) {
         for (int i = 0; i < vec_picked_ids.size(); i++) {
             if (vec_picked_ids[i] == it->first) {
-                table << it->second.GetID() << it->second.n << it->second.s << it->second.w_s << it->second.e;
+                table << it->second;
             }
         }
     }
@@ -110,27 +110,20 @@ int main()
 
     StreamTable table(cout);
 
-    int id;
-
-    string str;
-
     while (1)
     {
-        int a = 0;
         PrintMenu();
-        a = getInt(0, 8);
         cout << endl;
 
-        switch (a)
+        switch (getInt(0, 8))
         {
         case 1:
         {
             if (!Pipes.empty())
             {
                 vec_picked_ids.clear();
-                for (int i = 0; i <= Pipes.size(); i++) {
-                    vec_picked_ids.push_back(i);
-                }
+                for (auto& p : Pipes)
+                    vec_picked_ids.push_back(p.first);
 
                 PipeTable(table, Pipes, vec_picked_ids);
 
@@ -138,15 +131,14 @@ int main()
 
                 AfterTableMenu();
 
-                a = getInt(0, 3);
                 cout << endl;
 
-                switch (a)
+                switch (getInt(0, 3))
                 {
                 case 1: // add
                 {
                     Cpipe pipe;
-                    pipe.create();
+                    cin >> pipe;
                     Pipes.insert({ pipe.GetID(), pipe });
                     break;
                 }
@@ -157,7 +149,7 @@ int main()
                     while (1) 
                     {
                         cout << "Enter ID of pipeline (press 0 to exit): ";
-                        id = getInt();
+                        int id = getInt();
                         cout << endl << endl;
                         if (id == 0) break;
                         if (Pipes.find(id) != Pipes.end()) {
@@ -166,7 +158,7 @@ int main()
                         cout << "Modify one more?" <<
                             endl << "1. Yes" <<
                             endl << "2. No" << endl << endl;
-                        a = getInt(1,2);
+                        int a = getInt(1,2);
                         cout << endl << endl;
                         if (a == 2) break;
                     }
@@ -177,7 +169,7 @@ int main()
                     while (1)
                     {
                         cout << "Enter ID of pipeline (press 0 to exit): ";
-                        id = getInt();
+                        int id = getInt();
                         cout << endl << endl;
                         if (id == 0) break;
                         if (Pipes.find(id) != Pipes.end()) {
@@ -186,7 +178,7 @@ int main()
                         cout << "Delete one more?" <<
                             endl << "1. Yes" <<
                             endl << "2. No" << endl << endl;
-                        a = getInt(1, 2);
+                        int a = getInt(1, 2);
                         cout << endl << endl;
                         if (a == 2) break;
                     }
@@ -200,15 +192,14 @@ int main()
                     << "1. Yes" << endl
                     << "2. No" << endl << endl;
 
-                a = getInt(1, 2);
                 cout << endl << endl;
 
-                switch (a)
+                switch (getInt(1, 2))
                 {
                 case 1:
                 {
                     Cpipe pipe;
-                    pipe.create();
+                    cin >> pipe;
                     Pipes.insert({ pipe.GetID(), pipe });
                     break;
                 }
@@ -226,9 +217,9 @@ int main()
             if (!Stations.empty())
             {
                 vec_picked_ids.clear();
-                for (int i = 0; i <= Stations.size(); i++) {
-                    vec_picked_ids.push_back(i);
-                }
+                for (auto& p: Stations)//.size(); i++) {
+                    vec_picked_ids.push_back(p.first);
+                
 
                 StationTable(table, Stations, vec_picked_ids);
 
@@ -238,15 +229,14 @@ int main()
                     << "3. Delete" << endl
                     << "0. Back to home" << endl << endl;
 
-                a = getInt(0, 3);
                 cout << endl;
 
-                switch (a)
+                switch (getInt(0, 3))
                 {
                 case 1:
                 {
                     Cstation station;
-                    station.create();
+                    cin >> station;
                     Stations.insert({ station.GetID(), station });
                     break;
                 }
@@ -256,7 +246,7 @@ int main()
                     {
 
                         cout << "Enter ID of station (press 0 to exit): ";
-                        id = getInt();
+                        int id = getInt();
                         cout << endl << endl;
                         if (id == 0) break;
                         if (Stations.find(id) != Stations.end()) {
@@ -265,7 +255,7 @@ int main()
                         cout << "Modify one more?" <<
                             endl << "1. Yes" <<
                             endl << "2. No" << endl << endl;
-                        a = getInt(1, 2);
+                        int a = getInt(1, 2);
                         cout << endl << endl;
                         if (a == 2) break;
                     }
@@ -276,7 +266,7 @@ int main()
                     while (1)
                     {
                         cout << "Enter ID of station (press 0 to exit): ";
-                        id = getInt();
+                        int id = getInt();
                         cout << endl << endl;
                         if (id == 0) break;
                         if (Stations.find(id) != Stations.end()) {
@@ -285,7 +275,7 @@ int main()
                         cout << "Delete one more?" <<
                             endl << "1. Yes" <<
                             endl << "2. No" << endl << endl;
-                        a = getInt(1, 2);
+                        int a = getInt(1, 2);
                         cout << endl << endl;
                         if (a == 2) break;
                     }
@@ -299,15 +289,14 @@ int main()
                     << "1. Yes" << endl
                     << "2. No" << endl << endl;
 
-                a = getInt(1, 2);
                 cout << endl << endl;
 
-                switch (a)
+                switch (getInt(1, 2))
                 {
                 case 1:
                 {
                     Cstation station;
-                    station.create();
+                    cin >> station;
                     Stations.insert({ station.GetID(), station });
                     break;
                 }
@@ -340,7 +329,7 @@ int main()
                     cout << "Want to change status?" << endl
                         << "1. Yes" << endl
                         << "2. No" << endl << endl;
-                    a = getInt(1, 2);
+                    int a = getInt(1, 2);
                     cout << endl << endl;
                     if (a == 2) break;
 
@@ -365,16 +354,14 @@ int main()
                     << "2. By % of working shops" << endl
                     << "0. Return to home" << endl << endl;
 
-                a = getInt(0, 2);
-
-                switch (a)
+                switch (getInt(0, 2))
                 {
                 case 1:
                 {
                     // by name
                     vec_picked_ids.clear();
                     cout << "Enter name: ";
-                    str = getString();
+                    string str = getString();
                     cout << endl << endl;
 
                     vec_picked_ids = findByFilter(Stations, Cstation::checkName, str);
@@ -389,7 +376,7 @@ int main()
                         cout << "Want to modify?" << endl
                             << "1. Yes" << endl
                             << "2. No" << endl << endl;
-                        a = getInt(1, 2);
+                        int a = getInt(1, 2);
                         cout << endl << endl;
                         if (a == 2) break;
 
@@ -421,7 +408,7 @@ int main()
                         cout << "Want to modify?" << endl
                             << "1. Yes" << endl
                             << "2. No" << endl;
-                        a = getInt(1, 2);
+                        int a = getInt(1, 2);
                         if (a == 2) break;
                         cout << endl << endl;
 
@@ -465,7 +452,7 @@ int main()
                 case 6:
                 {
                     ifstream file;
-                    str = getFileName();
+                    string str = getFileName();
                     cout << endl << endl;
                     file.open(str, ios::in);
 
