@@ -14,11 +14,6 @@ bool Cpipe::checkDiameter(const Cpipe& Cpipe, int diameter)
     return diameter == Cpipe.d;
 }
 
-void Cpipe::create()
-{
-    
-}
-
 void Cpipe::edit()
 {
     std::cout << "Enter status for pipe " << GetID() << ": 0 - in use, 1 - repairing" << std::endl;
@@ -38,11 +33,13 @@ int Cpipe::GetID()
 
 StreamTable& operator << (StreamTable& out, const Cpipe& Cpipe)
 {
-    out 
+    out
         << Cpipe.id
         << Cpipe.l
         << Cpipe.d
-        << Cpipe.s;
+        << Cpipe.s
+        << Cpipe.from_id
+        << Cpipe.to_id;
     return out;
 
 }
@@ -52,7 +49,9 @@ std::ostream& operator<<(std::ostream& out, const Cpipe& Cpipe)
         << Cpipe.id << std::endl
         << Cpipe.l << std::endl
         << Cpipe.d << std::endl
-        << Cpipe.s << std::endl;
+        << Cpipe.s << std::endl
+        << Cpipe.from_id << std::endl
+        << Cpipe.to_id << std::endl;
     return out;
 }
 
@@ -60,6 +59,8 @@ std::istream& operator>>(std::istream& out, Cpipe& Cpipe)
 {
     Cpipe.max_id++;
     Cpipe.id = Cpipe.max_id;
+    Cpipe.from_id = -1;
+    Cpipe.to_id = -1;
 
     std::cout << "Ready to read pipeline properties." << std::endl;
 
@@ -84,7 +85,9 @@ std::ofstream& operator<<(std::ofstream& out, const Cpipe& Cpipe)
         << Cpipe.id << std::endl
         << Cpipe.l << std::endl
         << Cpipe.d << std::endl
-        << Cpipe.s << std::endl;
+        << Cpipe.s << std::endl
+        << Cpipe.from_id << std::endl
+        << Cpipe.to_id << std::endl;
     return out;
 }
 
@@ -101,5 +104,9 @@ std::ifstream& operator>>(std::ifstream& out, Cpipe& Cpipe)
     Cpipe.d = stoi(value);
     getline(out, value);
     Cpipe.s = stoi(value);
+    getline(out, value);
+    Cpipe.from_id = stoi(value);
+    getline(out, value);
+    Cpipe.to_id = stoi(value);
     return out;
 }

@@ -14,11 +14,6 @@ bool Cstation::checkPercent(const Cstation& Cstation, float percent)
     return round(((float)(Cstation.s - Cstation.w_s) / Cstation.s) * 100) >= percent;
 }
 
-void Cstation::create()
-{
-   
-}
-
 void Cstation::edit()
 {
     std::cout << "Edit station No. " << GetID() << " (" << this->n << ") " << std::endl;
@@ -44,12 +39,13 @@ int Cstation::GetMaxID()
 
 StreamTable& operator << (StreamTable& out, const Cstation& Cstation)
 {
-    out 
+    out
         << Cstation.id
         << Cstation.n
         << Cstation.s
         << Cstation.w_s
-        << Cstation.e;
+        << Cstation.e
+        << Cstation.u_s;
     return out;
 }
 
@@ -60,7 +56,8 @@ std::ostream& operator<<(std::ostream& out, const Cstation& Cstation)
         << Cstation.n << std::endl
         << Cstation.s << std::endl
         << Cstation.w_s << std::endl
-        << Cstation.e << std::endl;
+        << Cstation.e << std::endl
+        << Cstation.u_s << std::endl;
     return out;
 }
 
@@ -68,6 +65,7 @@ std::istream& operator>>(std::istream& out, Cstation& Cstation)
 {
     Cstation.max_id++;
     Cstation.id = Cstation.max_id;
+    Cstation.u_s = 0;
 
     std::cout << std::endl << "Ready to read station properties." << std::endl;
 
@@ -95,7 +93,8 @@ std::ofstream& operator<<(std::ofstream& out, const Cstation& Cstation)
         << Cstation.n << std::endl
         << Cstation.s << std::endl
         << Cstation.w_s << std::endl
-        << Cstation.e << std::endl;
+        << Cstation.e << std::endl
+        << Cstation.u_s << std::endl;
     return out;
 }
 
@@ -114,5 +113,7 @@ std::ifstream& operator>>(std::ifstream& out, Cstation& Cstation)
     Cstation.w_s = stoi(value);
     getline(out, value);
     Cstation.e = stoi(value);
+    getline(out, value);
+    Cstation.u_s = stoi(value);
     return out;
 }

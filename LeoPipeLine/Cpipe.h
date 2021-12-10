@@ -14,6 +14,8 @@ public:
     int d;
     float l;
     bool s;
+    int from_id;
+    int to_id;
 
     friend StreamTable& operator << (StreamTable& out, const Cpipe& Cpipe);
     friend std::ostream& operator << (std::ostream& out, const Cpipe& Cpipe);
@@ -24,7 +26,6 @@ public:
     static bool checkCondition(const Cpipe& Cpipe, bool condition);
     static bool checkDiameter(const Cpipe& Cpipe, int diameter);
 
-    void create();
     void edit();
 
     int GetID();

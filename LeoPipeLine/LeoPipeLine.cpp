@@ -4,11 +4,12 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "LeoPipeLine.h"
+//#include "LeoPipeLine.h"
 #include "StreamTable.h"
 #include "Ccheck.h"
 #include "Cpipe.h"
 #include "Cstation.h"
+#include "Cnetwork.h"
 
 using namespace std;
 
@@ -25,83 +26,58 @@ void PrintMenu()
         << "0. Quit" << endl << endl;
 }
 
-void AfterTableMenu()
-{
-    cout << "What to do?" << endl
-        << "1. Add new pipeline" << endl
-        << "2. Modify" << endl
-        << "3. Delete" << endl
-        << "0. Back to home" << endl << endl;
-}
-
-void WhatStatusToSet()
-{
-    cout << "What repairing status you want to set?" << endl
-        << "1. All in repair" << endl
-        << "2. All in use" << endl
-        << "0. Back to home" << endl << endl;
-}
-
-template <typename T, typename S>
-using Filter = bool(*)(const S& pipe, T param);
-
-template <typename T, typename S>
-static vector <int> findByFilter(const unordered_map<int, S>& pipes, Filter<T, S> f, T param) {
-    vector <int> keys;
-    for (auto& i : pipes) {
-        if (f(i.second, param))
-            keys.push_back(i.first);
-    }
-    return keys;
-}
-
-void PipeTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes, std::vector<int>& vec_picked_ids)
-{
-    table.Clear();
-    table.SetCols(4, 12);
-
-    table.MakeBorderExt(true);
-    table.SetDelimRow(true, '-');
-    table.SetDelimCol(true, '|');
-
-    cout << "Pipelines:" << endl << endl;
-
-    table << "ID" << "Diameter" << "Length" << "Repairing?";
-
-    for (auto it = Pipes.begin(); it != Pipes.end(); ++it) {
-        for (int i = 0; i < vec_picked_ids.size(); i++) {
-            if (vec_picked_ids[i] == it->first) {
-                table << it->second;
-            }
-        }
-    }
-}
-
-void StationTable(StreamTable& table, std::unordered_map<int, Cstation>& Stations, std::vector<int>& vec_picked_ids)
-{
-    table.Clear();
-    table.AddCol(5);
-    table.AddCol(15);
-    table.AddCol(10);
-    table.AddCol(20);
-    table.AddCol(20);
-
-    table.MakeBorderExt(true);
-    table.SetDelimRow(true, '-');
-    table.SetDelimCol(true, '|');
-
-    table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness";
-
-    for (auto it = Stations.begin(); it != Stations.end(); ++it) {
-        for (int i = 0; i < vec_picked_ids.size(); i++) {
-            if (vec_picked_ids[i] == it->first) {
-                table << it->second;
-            }
-        }
-    }
-}
 
 int main()
+{
+    Cnetwork Network;
+
+    while (1)
+    {
+        PrintMenu();
+        cout << endl;
+
+        switch (getInt(0, 8))
+        {
+        case 1:
+        {
+            Network.PipeMainMenu();
+            break;
+        }
+        case 2:
+        {
+            Network.StationMainMenu();
+            break;
+        }
+        case 3:
+        {
+            Network.SearchPipes();
+            break;
+        }
+        case 4:
+        {
+            Network.SearchStations();
+            break;
+        }
+        case 5:
+        {
+            Network.save();
+            break;
+        }
+        case 6:
+        {
+            Network.load();
+            break;
+        }
+        default:
+        {
+            return 0;
+        }
+        }
+    }
+ }
+
+
+/*int main()
 {
     vector <int> vec_picked_ids;
 
@@ -492,5 +468,5 @@ int main()
                 }
             }
         
-    }
-}
+    } 
+}*/

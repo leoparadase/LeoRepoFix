@@ -15,6 +15,7 @@ public:
     int s;
     int w_s;
     int e;
+    int u_s;
 
     friend StreamTable& operator << (StreamTable& out, const Cstation& Cstation);
     friend std::ostream& operator << (std::ostream& out, const Cstation& Cstation);
@@ -25,7 +26,6 @@ public:
     static bool checkName(const Cstation& Cstation, std::string name);
     static bool checkPercent(const Cstation& Cstation, float percent);
 
-    void create();
     void edit();
 
     int GetID();
