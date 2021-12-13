@@ -36,9 +36,10 @@ public:
 	void load();
 
 	// todo
-	//void PipeConnect();
-	//void PipeDisconnect();
+	void PipeConnect();
+	void PipeDisconnect();
 	//void NetworkMap();
+	//void NetworkSort();
 
 	template <typename T, typename S>
 	using Filter = bool(*)(const S& pipe, T param);

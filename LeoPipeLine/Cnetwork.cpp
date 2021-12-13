@@ -57,7 +57,7 @@ void Cnetwork::StationTable(StreamTable& table, std::unordered_map<int, Cstation
     table.SetDelimRow(true, '-');
     table.SetDelimCol(true, '|');
 
-    table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness" << "Used shops";
+    table << "ID" << "Name" << "Shops" << "Working shops" << "Effectiveness" << "Using shops";
 
     for (auto it = Stations.begin(); it != Stations.end(); ++it) {
         for (int i = 0; i < vec_picked_ids.size(); i++) {
@@ -124,7 +124,12 @@ void Cnetwork::PipeMainMenu()
                 cout << endl << endl;
                 if (id == 0) break;
                 if (Pipes.find(id) != Pipes.end()) {
-                    Pipes.erase(id);
+                    if ((Pipes[id].from_id == -1) && (Pipes[id].to_id == -1)) {
+                        Pipes.erase(id);
+                    }
+                    else cout << "Disconnect this pipe!" << endl << endl;
+                }
+                else cout << "No pipe in base" << endl << endl;
                 }
                 cout << "Delete one more?" <<
                     endl << "1. Yes" <<
@@ -136,7 +141,7 @@ void Cnetwork::PipeMainMenu()
             break;
         }
         }
-    }
+    // } deleted!
     else
     {
         cout << "No pipelines. Want to add?" << endl
@@ -221,8 +226,12 @@ void Cnetwork::StationMainMenu()
                 cout << endl << endl;
                 if (id == 0) break;
                 if (Stations.find(id) != Stations.end()) {
-                    Stations.erase(id);
+                    if (Stations[id].u_s == 0) {
+                        Stations.erase(id);
+                    }
+                    else cout << "Some shops are using now" << endl << endl;
                 }
+                else cout << "No station in base" << endl << endl;
                 cout << "Delete one more?" <<
                     endl << "1. Yes" <<
                     endl << "2. No" << endl << endl;
@@ -436,8 +445,75 @@ void Cnetwork::load()
     }
 }
 
-// todo
-//void Cnetwork::PipeConnect();
-//void Cnetwork::PipeDisconnect();
+void Cnetwork::PipeConnect() 
+{
+    cout << "Enter ID of pipeline (press 0 to exit): ";
+    int id = getInt();
+    if (id == 0) return;
+    cout << endl;
+
+    cout << "Enter ID of initial station (press 0 to exit): ";
+    int from_id = getInt();
+    if (from_id == 0) return;
+    cout << endl;
+
+    cout << "Enter ID of terminal station (press 0 to exit): ";
+    int to_id = getInt();
+    if (to_id == 0) return;
+
+    cout << endl << endl;
+    if (Pipes.find(id) != Pipes.end()) {
+        if (Stations.find(from_id) != Stations.end()) {
+            if (Stations.find(to_id) != Stations.end()) {
+                if (Pipes[id].from_id == -1 && Pipes[id].to_id == -1) {
+                    if (Stations[from_id].u_s < Stations[from_id].w_s) {
+                        if (Stations[from_id].u_s < Stations[from_id].w_s) {
+                            Pipes[id].from_id = from_id;
+                            Pipes[id].to_id = to_id;
+                            Stations[id].u_s++;
+
+                            cout << "Connected" << endl << endl;
+                        }
+                        else cout << "No vacant shop in initial station" << endl << endl;
+                    }
+                    else cout << "No vacant shop in initial station" << endl << endl;
+                }
+                else cout << "Pipe is already connected" << endl << endl;
+            }
+            else cout << "No such terminal station in base" << endl << endl;
+        }
+        else cout << "No such initial station in base" << endl << endl;
+    }
+    else cout << "No pipe in base" << endl << endl;
+}
+
+
+
+void Cnetwork::PipeDisconnect() // try to add it in delete menu
+{   
+    cout << "Enter ID of pipeline (press 0 to exit): ";
+    int id = getInt();
+    if (id == 0) return;
+    cout << endl << endl;
+
+    if (Pipes.find(id) != Pipes.end()) {
+        if (Pipes[id].from_id != -1 && Pipes[id].to_id != -1) {
+            Pipes[id].from_id = -1;
+            Pipes[id].to_id = -1;
+            Stations[id].u_s--;
+
+            cout << "Disconnected" << endl << endl;
+        }
+        else cout << "Pipe is disconnected" << endl << endl;
+    }
+    else cout << "No pipe in base" << endl << endl;
+}
+
 //void Cnetwork::NetworkMap();
+    // in unordered map:: struct/class: connection id, pipe id, station from id, station to id
+    // add struct when connecting, delete when disconnecting
+    // table output
+//void Cnetwork::NetworkSort();
+    // ask about sort
+    // init dot = station, in which connections contains: pipe->to.id = station_id AND NO FROM ID!!!
 

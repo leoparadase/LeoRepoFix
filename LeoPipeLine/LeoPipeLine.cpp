@@ -19,10 +19,12 @@ void PrintMenu()
 
     cout << "1. Show pipelines" << endl
         << "2. Show stations" << endl
-        << "3. Search pipelines" << endl
-        << "4. Search stations" << endl
-        << "5. Save to file" << endl
-        << "6. Load from file" << endl
+        << "3. Connect pipes" << endl
+        << "4. Disconnect pipes" << endl
+        << "5. Search pipelines" << endl
+        << "6. Search stations" << endl
+        << "7. Save to file" << endl
+        << "8. Load from file" << endl
         << "0. Quit" << endl << endl;
 }
 
@@ -50,20 +52,30 @@ int main()
         }
         case 3:
         {
-            Network.SearchPipes();
+            Network.PipeConnect();
             break;
         }
         case 4:
         {
-            Network.SearchStations();
+            Network.PipeDisconnect();
             break;
         }
         case 5:
         {
-            Network.save();
+            Network.SearchPipes();
             break;
         }
         case 6:
+        {
+            Network.SearchStations();
+            break;
+        }
+        case 7:
+        {
+            Network.save();
+            break;
+        }
+        case 8:
         {
             Network.load();
             break;

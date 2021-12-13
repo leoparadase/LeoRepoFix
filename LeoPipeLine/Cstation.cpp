@@ -20,7 +20,7 @@ void Cstation::edit()
     do {
         std::cout << "Enter number of working shops: ";
         this -> w_s = getInt();
-    } while (this -> w_s > this -> s);
+    } while ((this -> w_s > this -> s) || (this->w_s > this->u_s));
 
     std::cout << "Enter efficienty: ";
     this -> e = getInt();
