@@ -21,19 +21,39 @@ void Cnetwork::WhatStatusToSet()
         << "2. All in use" << endl
         << "0. Back to home" << endl << endl;
 }
-
-void Cnetwork::PipeTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes, std::vector<int>& vec_picked_ids)
+void Cnetwork::NetworkTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes)
 {
     table.Clear();
-    table.SetCols(6, 12);
+    table.SetCols(3, 15);
 
     table.MakeBorderExt(true);
     table.SetDelimRow(true, '-');
     table.SetDelimCol(true, '|');
 
-    cout << "Pipelines:" << endl << endl;
+    cout << "Connections:" << endl << endl;
 
-    table << "ID" << "Diameter" << "Length" << "Repairing?" << "From station No." << "To station No.";
+    table << "From station" << "By pipe" << "To station";
+
+    for (auto it = Pipes.begin(); it != Pipes.end(); ++it) {
+        if (it->second.from_id != -1 && it->second.to_id != -1) {
+            table << it->second.from_id << it->first << it->second.to_id;
+        }
+    }
+    
+    }
+
+void Cnetwork::PipeTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes, std::vector<int>& vec_picked_ids)
+{
+    table.Clear();
+    table.SetCols(6, 15);
+
+    table.MakeBorderExt(true);
+    table.SetDelimRow(true, '-');
+    table.SetDelimCol(true, '|');
+
+    cout << "Pipes:" << endl << endl;
+
+    table << "ID"  << "Length" << "Diameter" << "Repairing?" << "From station" << "To station";
 
     for (auto it = Pipes.begin(); it != Pipes.end(); ++it) {
         for (int i = 0; i < vec_picked_ids.size(); i++) {
@@ -168,6 +188,36 @@ void Cnetwork::PipeMainMenu()
     }
 }
 
+void Cnetwork::ShowConnections()
+{
+    if (!Pipes.empty()) {
+        NetworkTable(table, Pipes);
+    }
+}
+
+vector<vector<int>> Cnetwork::CreateGraph(const unordered_map<int, Cpipe>& Pipes, const unordered_map<int, Cstation>& Stations)
+{
+    set<int> vertices;
+    for (const auto& p : Pipes)
+        if (p.second.from_id > 0 && p.second.to_id > 0 && p.second.s == 0 && Stations.count(p.second.from_id) && Stations.count(p.second.to_id))
+        {
+            vertices.insert(p.second.from_id);
+            vertices.insert(p.second.to_id);
+        }
+
+    unordered_map<int, int> VerticesIndex;
+    int i = 0;
+    for (const int& v : vertices)
+        VerticesIndex.insert({ v, i++ });
+    vector<vector<int>> r;
+    r.resize(vertices.size());
+    for (const auto& p : Pipes)
+        if (p.second.to_id > 0 && p.second.from_id > 0 && p.second.s == false)
+            r[VerticesIndex[p.second.from_id]].push_back(VerticesIndex[p.second.to_id]);
+    return r;
+}
+
+
 void Cnetwork::StationMainMenu()
 {
     if (!Stations.empty())
@@ -289,14 +339,27 @@ void Cnetwork::SearchPipes()
             PipeTable(table, Pipes, vec_picked_ids);
             cout << "Want to change status?" << endl
                 << "1. Yes" << endl
-                << "2. No" << endl << endl;
-            int a = getInt(1, 2);
+                << "2. No" << endl
+                << "3. Change for all" << endl;
+            int a = getInt(1, 3);
             cout << endl << endl;
             if (a == 2) return;
 
-            for (int i = 0; i < vec_picked_ids.size(); i++) {
-                if (Pipes.find(vec_picked_ids[i]) != Pipes.end()) {
-                    Pipes[vec_picked_ids[i]].edit();
+            if (a == 1)
+            {
+                for (int i = 0; i < vec_picked_ids.size(); i++) {
+                    if (Pipes.find(vec_picked_ids[i]) != Pipes.end()) {
+                        Pipes[vec_picked_ids[i]].edit();
+                    }
+                }
+            }
+
+            if (a == 3)
+            {
+                for (int i = 0; i < vec_picked_ids.size(); i++) {
+                    if (Pipes.find(vec_picked_ids[i]) != Pipes.end()) {
+                        Pipes[vec_picked_ids[i]].s = !(Pipes[vec_picked_ids[i]].s);
+                    }
                 }
             }
 
@@ -460,6 +523,10 @@ void Cnetwork::PipeConnect()
     cout << "Enter ID of terminal station (press 0 to exit): ";
     int to_id = getInt();
     if (to_id == 0) return;
+    if (from_id == to_id) {
+        cout << "Can't connect to same station" << endl << endl;
+        return;
+    }
 
     cout << endl << endl;
     if (Pipes.find(id) != Pipes.end()) {
@@ -467,14 +534,15 @@ void Cnetwork::PipeConnect()
             if (Stations.find(to_id) != Stations.end()) {
                 if (Pipes[id].from_id == -1 && Pipes[id].to_id == -1) {
                     if (Stations[from_id].u_s < Stations[from_id].w_s) {
-                        if (Stations[from_id].u_s < Stations[from_id].w_s) {
+                        if (Stations[to_id].u_s < Stations[to_id].w_s) {
                             Pipes[id].from_id = from_id;
                             Pipes[id].to_id = to_id;
-                            Stations[id].u_s++;
+                            Stations[from_id].u_s++;
+                            Stations[to_id].u_s++;
 
                             cout << "Connected" << endl << endl;
                         }
-                        else cout << "No vacant shop in initial station" << endl << endl;
+                        else cout << "No vacant shop in terminal station" << endl << endl;
                     }
                     else cout << "No vacant shop in initial station" << endl << endl;
                 }
@@ -486,9 +554,6 @@ void Cnetwork::PipeConnect()
     }
     else cout << "No pipe in base" << endl << endl;
 }
-
-
-
 void Cnetwork::PipeDisconnect() // try to add it in delete menu
 {   
     cout << "Enter ID of pipeline (press 0 to exit): ";
@@ -498,15 +563,35 @@ void Cnetwork::PipeDisconnect() // try to add it in delete menu
 
     if (Pipes.find(id) != Pipes.end()) {
         if (Pipes[id].from_id != -1 && Pipes[id].to_id != -1) {
+            
+            Stations[Pipes[id].from_id].u_s--;
+            Stations[Pipes[id].to_id].u_s--;
             Pipes[id].from_id = -1;
             Pipes[id].to_id = -1;
-            Stations[id].u_s--;
 
             cout << "Disconnected" << endl << endl;
         }
         else cout << "Pipe is disconnected" << endl << endl;
     }
     else cout << "No pipe in base" << endl << endl;
+}
+
+void Cnetwork::NetworkSort()
+{
+    vector<vector<int>> r = CreateGraph(Pipes, Stations);
+    Sort Topolog(r);
+    set<int> vertices;
+    for (const auto& p : Pipes)
+        if (p.second.from_id > 0 && p.second.to_id > 0 && p.second.s == false && Stations.count(p.second.from_id) && Stations.count(p.second.to_id))
+        {
+            vertices.insert(p.second.from_id);
+            vertices.insert(p.second.to_id);
+        }
+    unordered_map<int, int> VerticesIndex;
+    int i = 0;
+    for (const int& v : vertices)
+        VerticesIndex.insert({ i++, v });
+    Topolog.TopSort(VerticesIndex);
 }
 
 //void Cnetwork::NetworkMap();

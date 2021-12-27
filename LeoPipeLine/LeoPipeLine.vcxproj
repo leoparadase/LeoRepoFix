@@ -143,6 +143,7 @@
     <ClCompile Include="Ccheck.cpp" />
     <ClCompile Include="Cnetwork.cpp" />
     <ClCompile Include="Cpipe.cpp" />
+    <ClCompile Include="Csort.cpp" />
     <ClCompile Include="Cstation.cpp" />
     <ClCompile Include="LeoPipeLine.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="Ccheck.h" />
     <ClInclude Include="Cnetwork.h" />
     <ClInclude Include="Cpipe.h" />
+    <ClInclude Include="Csort.h" />
     <ClInclude Include="Cstation.h" />
     <ClInclude Include="LeoPipeLine.h" />
     <ClInclude Include="StreamTable.h" />

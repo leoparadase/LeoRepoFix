@@ -21,10 +21,12 @@ void PrintMenu()
         << "2. Show stations" << endl
         << "3. Connect pipes" << endl
         << "4. Disconnect pipes" << endl
-        << "5. Search pipelines" << endl
-        << "6. Search stations" << endl
-        << "7. Save to file" << endl
-        << "8. Load from file" << endl
+        << "5. Show connections" << endl
+        << "6. Search pipelines" << endl
+        << "7. Search stations" << endl
+        << "8. Save to file" << endl
+        << "9. Load from file" << endl
+        << "10. Sort network" << endl
         << "0. Quit" << endl << endl;
 }
 
@@ -37,8 +39,9 @@ int main()
     {
         PrintMenu();
         cout << endl;
+        int a = getInt(0, 10);
 
-        switch (getInt(0, 8))
+        switch (a)
         {
         case 1:
         {
@@ -62,22 +65,32 @@ int main()
         }
         case 5:
         {
-            Network.SearchPipes();
+            Network.ShowConnections();
             break;
         }
         case 6:
         {
-            Network.SearchStations();
+            Network.SearchPipes();
             break;
         }
         case 7:
         {
-            Network.save();
+            Network.SearchStations();
             break;
         }
         case 8:
         {
+            Network.save();
+            break;
+        }
+        case 9:
+        {
             Network.load();
+            break;
+        }
+        case 10:
+        {
+            Network.NetworkSort();
             break;
         }
         default:

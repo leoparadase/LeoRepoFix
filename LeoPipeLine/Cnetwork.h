@@ -3,12 +3,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <set>
 #include <vector>
 #include <unordered_map>
 #include "StreamTable.h"
 #include "Ccheck.h"
 #include "Cpipe.h"
 #include "Cstation.h"
+#include "Csort.h"
 
 using namespace std;
 
@@ -24,6 +26,7 @@ public:
 
 	void PipeTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes, std::vector<int>& vec_picked_ids);
 	void StationTable(StreamTable& table, std::unordered_map<int, Cstation>& Stations, std::vector<int>& vec_picked_ids);
+	void NetworkTable(StreamTable& table, std::unordered_map<int, Cpipe>& Pipes);
 
 	void PipeMainMenu();
 	void StationMainMenu();
@@ -31,6 +34,8 @@ public:
 	// add search by ID
 	void SearchPipes();
 	void SearchStations();
+	void ShowConnections();
+	vector<vector<int>> CreateGraph(const unordered_map<int, Cpipe>& Pipes, const unordered_map<int, Cstation>& Stations);
 
 	void save();
 	void load();
@@ -39,7 +44,7 @@ public:
 	void PipeConnect();
 	void PipeDisconnect();
 	//void NetworkMap();
-	//void NetworkSort();
+	void NetworkSort();
 
 	template <typename T, typename S>
 	using Filter = bool(*)(const S& pipe, T param);
